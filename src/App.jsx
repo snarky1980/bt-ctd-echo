@@ -1784,7 +1784,7 @@ function App () {
                   setFocusedVar(null)
                   // Optionally, sync back to pills on blur
                   // syncFromText()
-                               }}
+                                                             }}
                 className={`pr-10 ${isFilled ? 'bg-muted' : ''}`}
                 placeholder={`Enter value for ${key}`}
                 spellCheck="false"
