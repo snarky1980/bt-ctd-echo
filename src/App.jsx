@@ -1784,7 +1784,7 @@ function App () {
                   setFocusedVar(null)
                   // Optionally, sync back to pills on blur
                   // syncFromText()
-                }}
+                               }}
                 className={`pr-10 ${isFilled ? 'bg-muted' : ''}`}
                 placeholder={`Enter value for ${key}`}
                 spellCheck="false"
@@ -1847,7 +1847,7 @@ function App () {
           <div className="flex items-center gap-4">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => setAiSidebarOpen(!isAiSidebarOpen)}>
+                <Button variant="ghost" size="icon" onClick={() => setShowAIPanel(!showAIPanel)}>
                   <Bot className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -1906,7 +1906,7 @@ function App () {
                     {filteredTemplates.map(template => (
                       <Card
                         key={template.id}
-                        className={`cursor-pointer hover:bg-muted/50 ${activeTemplate?.id === template.id ? 'border-primary' : ''}`}
+                        className={`cursor-pointer hover:bg-muted/50 ${selectedTemplate?.id === template.id ? 'border-primary' : ''}`}
                         onClick={() => handleTemplateSelect(template.id)}
                       >
                         <CardHeader className="p-4">
@@ -1967,28 +1967,28 @@ function App () {
                       <label htmlFor="subject" className="text-sm font-medium">{t.subject}</label>
                       <Input
                         id="subject"
-                        ref={subjectRef}
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
+                        ref={subjectEditorRef}
+                        value={finalSubject}
+                        onChange={(e) => setFinalSubject(e.target.value)}
                       />
                     </div>
                     <div className="flex-grow" style={{ height: `${editorHeight}px` }}>
                       {isRichText
                         ? (
                           <RichTextPillEditor
-                            initialValue={emailBody}
-                            onChange={setEmailBody}
-                            variableAssignments={variableAssignments}
+                            initialValue={finalBody}
+                            onChange={setFinalBody}
+                            variableAssignments={variables}
                             variables={variables}
                             templateLanguage={templateLanguage}
                           />
                           )
                         : (
                           <SimplePillEditor
-                            value={emailBody}
-                            onChange={setEmailBody}
-                            variableAssignments={variableAssignments}
-                            onVariableChange={handleVariableChange}
+                            value={finalBody}
+                            onChange={setFinalBody}
+                            variableAssignments={variables}
+                            onVariableChange={handleInlineVariableChange}
                             variables={variables}
                             templateLanguage={templateLanguage}
                           />
@@ -2020,19 +2020,19 @@ function App () {
             </ResizablePanel>
 
             {/* Right Panel: AI Sidebar */}
-            {isAiSidebarOpen && (
+            {showAIPanel && (
               <>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={25} minSize={15} collapsible>
                   <AISidebar
-                    subject={subject}
-                    body={emailBody}
-                    variables={variableAssignments}
-                    template={activeTemplate}
+                    subject={finalSubject}
+                    body={finalBody}
+                    variables={variables}
+                    template={selectedTemplate}
                     language={templateLanguage}
                     onUpdateContent={({ subject, body }) => {
-                      setSubject(subject)
-                      setEmailBody(body)
+                      setFinalSubject(subject)
+                      setFinalBody(body)
                     }}
                   />
                 </ResizablePanel>
