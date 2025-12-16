@@ -8,6 +8,7 @@ import { useTemplateState } from './hooks/useTemplateState.js'
 import { useVariableState } from './hooks/useVariableState.js'
 import { useTemplateSearch } from './hooks/useTemplateSearch.jsx'
 import { useVariableProcessor } from './hooks/useVariableProcessor.js'
+import { useDebounce } from './hooks/useDebounce.js'
 import { useCategory } from './utils/category.js'
 import { Header } from './components/app/Header.jsx';
 import { TemplateList } from './components/app/TemplateList.jsx';
