@@ -1,5 +1,3 @@
-/* eslint-disable no-console, no-prototype-builtins, no-unreachable, no-undef, no-empty */
-/* DEPLOY: 2025-10-15 07:40 - FIXED: Function hoisting error resolved */
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import {
   expandVariableAssignment,
@@ -10,54 +8,22 @@ import {
 import canonicalTemplatesRaw from '../complete_email_templates.json'
 import { createPortal } from 'react-dom'
 import Fuse from 'fuse.js'
-import { loadState, saveState, getDefaultState, clearState } from './utils/storage.js';
-// Deploy marker: 2025-10-16T07:31Z
+import { loadState, saveState, getDefaultState, clearState } from './utils/storage.js'
 import { Search, FileText, Copy, RotateCcw, Languages, Filter, Globe, Sparkles, Mail, Edit3, Link, Settings, X, Move, Send, Star, ClipboardPaste, Eraser, Pin, PinOff, Minimize2, ExternalLink, Expand, Shrink, MoveRight, LifeBuoy } from 'lucide-react'
 import echoLogo from './assets/echo-logo.svg'
 import { Button } from './components/ui/button.jsx'
 import { Input } from './components/ui/input.jsx'
-import SimplePillEditor from './components/SimplePillEditor.jsx';
-import RichTextPillEditor from './components/RichTextPillEditor.jsx';
-import AISidebar from './components/AISidebar';
+import SimplePillEditor from './components/SimplePillEditor.jsx'
+import RichTextPillEditor from './components/RichTextPillEditor.jsx'
+import AISidebar from './components/AISidebar'
 import HelpCenter from './components/HelpCenter.jsx'
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card.jsx'
 import { Badge } from './components/ui/badge.jsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select.jsx'
 import { ScrollArea } from './components/ui/scroll-area.jsx'
 import { useToast } from './components/ui/toast.jsx'
+import { getCategoryBadgeStyle } from './constants/categories.js'
 import './App.css'
-
-const NAVY_TEXT = '#1c2f4a'
-
-const CATEGORY_BADGE_STYLES = {
-  quotes_and_approvals: { bg: '#ede9fe', border: '#c4b5fd', text: NAVY_TEXT },
-  follow_ups_and_cancellations: { bg: '#ffe4e6', border: '#fecdd3', text: NAVY_TEXT },
-  documents_and_formatting: { bg: '#e0f2fe', border: '#bae6fd', text: NAVY_TEXT },
-  deadlines_and_delivery: { bg: '#ffedd5', border: '#fdba74', text: NAVY_TEXT },
-  clarifications_and_client_instructions: { bg: '#fef3c7', border: '#fde68a', text: NAVY_TEXT },
-  security_and_copyright: { bg: '#fee2e2', border: '#fecaca', text: NAVY_TEXT },
-  quality_assurance: { bg: '#dcfce7', border: '#bbf7d0', text: NAVY_TEXT },
-  terminology_and_glossaries: { bg: '#cffafe', border: '#a5f3fc', text: NAVY_TEXT },
-  revisions_and_feedback: { bg: '#fae8ff', border: '#f0abfc', text: NAVY_TEXT },
-  team_coordination: { bg: '#e0e7ff', border: '#c7d2fe', text: NAVY_TEXT },
-  technical_issues: { bg: '#ccfbf1', border: '#99f6e4', text: NAVY_TEXT },
-  general_inquiries: { bg: '#f1f5f9', border: '#cbd5e1', text: NAVY_TEXT },
-  default: { bg: '#e6f0ff', border: '#c7dbff', text: NAVY_TEXT }
-}
-
-const getCategoryBadgeStyle = (category = '', customColors = {}) => {
-  // If custom color exists, generate dynamic style
-  if (customColors[category]) {
-    const baseColor = customColors[category]
-    return {
-      bg: baseColor + '20',  // 20% opacity for background
-      border: baseColor + '80',  // 80% opacity for border
-      text: baseColor
-    }
-  }
-  // Fall back to predefined styles
-  return CATEGORY_BADGE_STYLES[category] || CATEGORY_BADGE_STYLES.default
-}
 
 // Custom CSS for modern typography and variable highlighting with the EXACT original teal/sage styling
 const customEditorStyles = `

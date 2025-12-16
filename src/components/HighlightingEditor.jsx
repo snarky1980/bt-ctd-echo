@@ -1,4 +1,3 @@
-/* eslint-disable no-console, no-unused-vars */
 import React, { useRef, useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import Pill from './Pill';

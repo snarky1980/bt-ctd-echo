@@ -108,8 +108,7 @@ npm run preview
 
 ### Developer Resources
 - **[Developer Guide](docs/DEVELOPER-GUIDE.md)**: Architecture and development
-- **[Changelog](CHANGELOG_2025-11-04.md)**: Version history and updates
-- **[Implementation Report](IMPLEMENTATION_REPORT.md)**: Technical details
+- **[System Integrity Check](docs/SYSTEM-INTEGRITY-CHECK.md)**: Validation procedures
 
 ---
 
