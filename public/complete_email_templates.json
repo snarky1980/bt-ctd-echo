@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "1.0",
-    "totalTemplates": 29,
+    "totalTemplates": 30,
     "languages": [
       "fr",
       "en"
@@ -12,16 +12,17 @@
       "documents_and_formatting",
       "follow_ups_and_cancellations",
       "quotes_and_approvals",
-      "security_and_copyright"
+      "security_and_copyright",
+      "unsatisfactory"
     ],
     "categoryLabels": {
       "quotes_and_approvals": {
-        "en": "Quotes and approvals",
-        "fr": "Devis et approbations"
+        "fr": "Devis et approbations",
+        "en": "Quotes and approvals"
       },
       "follow_ups_and_cancellations": {
-        "en": "Follow-ups and cancellations",
-        "fr": "Suivi et annulations"
+        "fr": "Suivis et annulations",
+        "en": "Follow-ups and cancellations"
       },
       "documents_and_formatting": {
         "en": "Documents and formatting",
@@ -38,9 +39,16 @@
       "security_and_copyright": {
         "en": "Security and copyright",
         "fr": "Sécurité et droits d’auteur"
+      },
+      "unsatisfactory": {
+        "fr": "Fournisseurs externes - Qualité insatisfaisante",
+        "en": "External Providers - unsatisfactory quality"
       }
     },
-    "updatedAt": "2025-11-20T23:20:58.405Z"
+    "updatedAt": "2025-11-20T23:20:58.405Z",
+    "categoryColors": {
+      "s": "#c7ffd2"
+    }
   },
   "templates": [
     {
@@ -54,7 +62,7 @@
       },
       "description": {
         "fr": "Devis avant le lancement d'un projet - approbation requise",
-        "en": "Quotes – approval required"
+        "en": "Devis avant le lancement d'un projet - approbation requise"
       },
       "subject": {
         "fr": "Projet <<ProjectNumber_FR>> – Devis à approbation requise",
@@ -100,7 +108,7 @@
     {
       "id": "ctd003",
       "category": "follow_ups_and_cancellations",
-      "category_fr": "Suivi et annulations",
+      "category_fr": "Suivis et annulations",
       "category_en": "Follow-ups and cancellations",
       "title": {
         "fr": "Projet <<ProjectNumber_FR>> – Suivi d’approbation",
@@ -237,7 +245,7 @@
     {
       "id": "ctd008",
       "category": "follow_ups_and_cancellations",
-      "category_fr": "Suivi et annulations",
+      "category_fr": "Suivis et annulations",
       "category_en": "Follow-ups and cancellations",
       "title": {
         "fr": "Projet <<ProjectNumber_FR>> – Annulation",
@@ -262,7 +270,7 @@
     {
       "id": "ctd009",
       "category": "deadlines_and_delivery",
-      "category_fr": "Délai et livraisons",
+      "category_fr": "Délais et livraisons",
       "category_en": "Deadlines and delivery",
       "title": {
         "fr": "Projet <<ProjectNumber_FR>> – Nouvelle date de livraison",
@@ -650,7 +658,7 @@
     {
       "id": "ctd024",
       "category": "follow_ups_and_cancellations",
-      "category_fr": "Suivi et annulations",
+      "category_fr": "Suivis et annulations",
       "category_en": "Follow-ups and cancellations",
       "title": {
         "fr": "Projet <<ProjectNumber_FR>> – Retour d’information sur l’annulation",
@@ -792,6 +800,36 @@
         "en": "Hello,\r\n\r\nI am writing to inform you that an error has occurred regarding the transmission of protected documents. This situation must be rectified immediately to ensure the security and confidentiality of the information.\r\n\r\nHere are the actions you need to take without delay:\r\n\r\nVerification of document download\r\nPlease confirm whether you have downloaded the documents we sent you. This step is essential to determine if the documents have been saved on your systems. If you have downloaded these documents, it is imperative that you proceed with the immediate deletion of all copies.\r\n\r\nDeletion of all copies of the documents\r\nIf the documents have been downloaded, please delete them entirely from all your devices and storage media, including, but not limited to:\r\nOn your server\r\nOn your local computer\r\nIn all systems or databases where the documents may have been copied or stored\r\nOn any other device or network that may have retained a copy of the documents (external hard drives, backup systems, etc.)\r\n\r\nThis deletion must be carried out thoroughly, ensuring that no residual copies remain on your systems.\r\n\r\nVerification of unprotected storage\r\nAlso ensure that these documents have not been transferred to unprotected storage areas, such as unsecured folders, third-party applications, or removable storage devices. If this is the case, please proceed with the deletion of these copies without delay.\r\n\r\nConfirmation of deletion\r\nOnce all copies have been deleted, please confirm by replying to this email that this action has been successfully completed. It is crucial that we receive a confirmation from you to close this matter.\r\n\r\nFinally, we ask that you report any difficulty you may encounter while carrying out these actions, or if you need any technical assistance.\r\n\r\nWe understand that this situation may cause inconvenience, and we thank you for your prompt and efficient cooperation to ensure the security of the information. We remain available for any questions or additional clarifications.\r\n\r\nBest regards,"
       },
       "variables": []
+    },
+    {
+      "id": "insat_qualite_nouvelleAMA",
+      "category": "unsatisfactory",
+      "title": {
+        "fr": "Avis pour qualité insatisfaisante - nouvelle AMA",
+        "en": "Notice for unsatisfactory quality - New AMA"
+      },
+      "description": {
+        "fr": "Avis pour qualité insatisfaisante - nouvelle AMA",
+        "en": "Notice for unsatisfactory quality - New AMA"
+      },
+      "subject": {
+        "fr": "",
+        "en": ""
+      },
+      "body": {
+        "fr": "Hello,\n\nUnder Article A6 of the Statement of Work for contract No. <<contract_number_EN>>, you are obliged to provide translation work that meets the quality and timeliness standards for official languages translation. \n\nCanada hereby advises you that translation request No. <<project_number_EN>> was deemed to be unsatisfactory. As stated in clause <<article_number1_EN>>, Notice of Unsatisfactory Performance, of your contract, notices of unsatisfactory performance affect the quality indicator and may result in termination of the contract for default and suspension of the supply arrangement in whole or in part.\n\nPlease note that Canada will deduct a fee of $<<penalty_EN>> (excluding taxes) from your invoice in order to compensate Canada for the additional costs relating to the production of a deliverable translation (see clause <<article_number2_EN>>of your contract for more information.\n\nIf you disagree with this email and wish to challenge the notice of unsatisfactory performance, please send your comments in writing, as described in clause <<article_number3_EN>>, Challenge Mechanism Following a Notice of Unsatisfactory Performance, of your contract, for reconsideration.\n\nPlease note that this unsatisfactory evaluation will be placed on your file.\n\nThank you.",
+        "en": "Bonjour,\n\nEn vertu de l’article A6 de l’énoncé des travaux du contrat no <<contract_number_FR>>, vous êtes tenu de fournir les travaux de traduction conformément aux normes de qualité et respect des délais pour la traduction en langues officielles.\n\nPar la présente, le Canada vous informe que le texte no <<project_number_FR>> a été jugé insatisfaisant. Comme stipulé à l’article <<article_number1_FR>> Avis de prestations insatisfaisantes du contrat, les avis de prestations insatisfaisantes ont une incidence sur l’indice de qualité et peuvent entraîner la résiliation d’un contrat pour manquement et la suspension de l’AMA du fournisseur, en partie ou en entier.  \n\nVeuillez prendre note que le Canada déduira des frais de <<penalty_FR>> $ (taxes non comprises) de votre facture afin de le dédommager du coût additionnel lié à la production d’une traduction livrable (voir article <<article_number2_FR>> du contrat pour plus d’information). \n\nSi vous n’êtes pas d’accord avec le présent courriel, et que vous désirez contester l’avis de prestation insatisfaisante, veuillez faire parvenir vos observations par écrit selon les modalités décrites à l’article <<article_number3_FR>> Mécanisme de contestation suite à un avis de prestation insatisfaisante de votre contrat, pour fins de réexamen. \n\nVeuillez prendre note que cette évaluation insatisfaisante sera versée à votre dossier.  \n\nMerci."
+      },
+      "variables": [
+        "article_number1",
+        "article_number2",
+        "article_number3",
+        "contract_number",
+        "penalty",
+        "project_number"
+      ],
+      "category_fr": "Fournisseurs externes - Qualité insatisfaisante",
+      "category_en": "External Providers - unsatisfactory quality"
     }
   ],
   "variables": {
@@ -1036,6 +1074,105 @@
         "fr": "123-4567-003"
       },
       "format": "text"
+    },
+    "clientname": {
+      "description": {
+        "fr": "Nom du client",
+        "en": "Client name"
+      },
+      "format": "text",
+      "example": {
+        "fr": "Madeleine",
+        "en": "Louise"
+      }
+    },
+    "id": {
+      "description": {
+        "fr": "Identification FR",
+        "en": "Identification EN"
+      },
+      "format": "text",
+      "example": {
+        "fr": "Dete FR",
+        "en": "Date EN"
+      }
+    },
+    "da": {
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "format": "text",
+      "example": {
+        "fr": "",
+        "en": ""
+      }
+    },
+    "datelimite": {
+      "description": {
+        "fr": "date limite FR",
+        "en": "date limite EN"
+      },
+      "format": "text",
+      "example": {
+        "fr": "hello",
+        "en": "allo"
+      }
+    },
+    "article_number1": {
+      "description": {
+        "fr": "Article - avis de prestations insatisfaisantes",
+        "en": "Clause - Notice of Unsatisfactory Performance"
+      },
+      "format": "text",
+      "example": {
+        "fr": "20.1",
+        "en": "20.1"
+      }
+    },
+    "article_number2": {
+      "description": {
+        "fr": "Article - dommages et interêts",
+        "en": "Clause - Damages and Interests"
+      },
+      "format": "text",
+      "example": {
+        "fr": "21",
+        "en": "21"
+      }
+    },
+    "article_number3": {
+      "description": {
+        "fr": "Article - Mécanisme de contestation",
+        "en": "Clause - Challenge Mechanism"
+      },
+      "format": "text",
+      "example": {
+        "fr": "20.3",
+        "en": "20.3"
+      }
+    },
+    "contract_number": {
+      "description": {
+        "fr": "Numéro de contrat",
+        "en": "Contract number"
+      },
+      "format": "text",
+      "example": {
+        "fr": "20000XXXX",
+        "en": "20000XXXX"
+      }
+    },
+    "penalty": {
+      "description": {
+        "fr": "Pénalité",
+        "en": "Penalty"
+      },
+      "format": "text",
+      "example": {
+        "fr": "XXX",
+        "en": "XXX"
+      }
     }
   }
 }

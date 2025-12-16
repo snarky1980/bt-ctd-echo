@@ -8,20 +8,7 @@ import {
   varKeysMatch
 } from './utils/variables'
 
-const applyAssignments = (prev = {}, assignments = {}) => {
-  const keys = Object.keys(assignments || {})
-  if (!keys.length) return prev
-  let hasDiff = false
-  const next = { ...prev }
-  keys.forEach((key) => {
-    const normalized = (assignments[key] ?? '').toString()
-    if ((next[key] ?? '') !== normalized) {
-      next[key] = normalized
-      hasDiff = true
-    }
-  })
-  return hasDiff ? next : prev
-}
+
 
 const resolveVariableInfo = (templatesData, name = '') => {
   if (!templatesData?.variables || !name) return null
