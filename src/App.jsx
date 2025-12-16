@@ -1833,8 +1833,8 @@ function App () {
         {/* Header */}
         <header className="p-4 border-b flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold">{texts.title}</h1>
-            <span className="text-muted-foreground">{texts.subtitle}</span>
+            <h1 className="text-2xl font-bold">{t.title}</h1>
+            <span className="text-muted-foreground">{t.subtitle}</span>
           </div>
           <div className="flex items-center gap-4">
             <Tooltip>
@@ -1850,7 +1850,7 @@ function App () {
             <Select value={interfaceLanguage} onValueChange={setInterfaceLanguage}>
               <SelectTrigger className="w-[180px]">
                 <Languages className="h-4 w-4 mr-2" />
-                <SelectValue placeholder={texts.interfaceLanguage} />
+                <SelectValue placeholder={t.interfaceLanguage} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="fr">Français</SelectItem>
@@ -1867,14 +1867,14 @@ function App () {
             <ResizablePanel defaultSize={35} minSize={20}>
               <div className="p-4 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">{texts.selectTemplate}</h2>
-                  <Badge variant="secondary">{filteredTemplates.length} {texts.templatesCount}</Badge>
+                  <h2 className="text-lg font-semibold">{t.selectTemplate}</h2>
+                  <Badge variant="secondary">{filteredTemplates.length} {t.templatesCount}</Badge>
                 </div>
                 <div className="flex gap-2 mb-4">
                   <div className="relative flex-grow">
                     <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder={texts.searchPlaceholder}
+                      placeholder={t.searchPlaceholder}
                       className="pl-8"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -1882,12 +1882,12 @@ function App () {
                   </div>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder={texts.allCategories} />
+                      <SelectValue placeholder={t.allCategories} />
                     </SelectTrigger>
                     <SelectContent>
                       {categories.map(cat => (
                         <SelectItem key={cat} value={cat}>
-                          {texts.categories[cat] || cat}
+                          {t.categories[cat] || cat}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -1905,7 +1905,7 @@ function App () {
                           <CardTitle className="text-base">{template.name}</CardTitle>
                         </CardHeader>
                         <CardContent className="p-4 pt-0 text-sm text-muted-foreground">
-                          <p><strong>{texts.subject}:</strong> {template.subject[templateLanguage] || template.subject.fr}</p>
+                          <p><strong>{t.subject}:</strong> {template.subject[templateLanguage] || template.subject.fr}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -1922,11 +1922,11 @@ function App () {
                 <ResizablePanel defaultSize={70} minSize={50} onResize={handleEditorResize}>
                   <div className="p-4 h-full flex flex-col">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-lg font-semibold">{texts.editEmail}</h2>
+                      <h2 className="text-lg font-semibold">{t.editEmail}</h2>
                       <div className="flex items-center gap-2">
                         <Select value={templateLanguage} onValueChange={setTemplateLanguage}>
                           <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder={texts.templateLanguage} />
+                            <SelectValue placeholder={t.templateLanguage} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
@@ -1956,7 +1956,7 @@ function App () {
                       </div>
                     </div>
                     <div className="mb-4">
-                      <label htmlFor="subject" className="text-sm font-medium">{texts.subject}</label>
+                      <label htmlFor="subject" className="text-sm font-medium">{t.subject}</label>
                       <Input
                         id="subject"
                         ref={subjectRef}
@@ -1998,7 +1998,7 @@ function App () {
                       className="flex items-center justify-between cursor-pointer mb-4"
                       onClick={() => setIsVariablesOpen(!isVariablesOpen)}
                     >
-                      <h2 className="text-lg font-semibold">{texts.variables}</h2>
+                      <h2 className="text-lg font-semibold">{t.variables}</h2>
                       {isVariablesOpen ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
                     </div>
                     {isVariablesOpen && (
