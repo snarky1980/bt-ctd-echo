@@ -1884,8 +1884,8 @@ function App () {
                     <Input
                       placeholder={t.searchPlaceholder}
                       className="pl-8"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
