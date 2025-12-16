@@ -826,9 +826,18 @@ const RichTextPillEditor = React.forwardRef(({
     hasMountedRef.current = true;
     prevValueRef.current = value;
     prevVariablesRef.current = variables;
+    
+    let timer = null;
     if (firstRun || textChanged) {
-      refreshAllPillTemplates(editor);
+      // Debounce the expensive template refresh to avoid layout thrashing during typing
+      timer = setTimeout(() => {
+        refreshAllPillTemplates(editor);
+      }, 500);
     }
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [value, variables, isFocused, getVarValue, templateLanguage]);
 
   // Apply focused pill styling - IDENTICAL to SimplePillEditor
