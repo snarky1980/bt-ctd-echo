@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
-import { getDefaultState, loadState } from '../utils/storage'
+import { useState, useEffect } from 'react'
+import { loadState } from '../utils/storage'
 import { CANONICAL_TEMPLATES, mergeTemplateDatasets } from '../utils/template'
 
 export function useTemplateState() {
@@ -33,7 +33,7 @@ export function useTemplateState() {
             return parsed
           }
         }
-      } catch (e) {
+      } catch {
         // ignore
       }
       return null
@@ -77,7 +77,7 @@ export function useTemplateState() {
           if (fallbackDataset) {
             setTemplatesData((prev) => mergeTemplateDatasets(prev || canonicalDataset, fallbackDataset))
           }
-        } catch (fallbackError) {
+        } catch {
           // ignore
         }
         return

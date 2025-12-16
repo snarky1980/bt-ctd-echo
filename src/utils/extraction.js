@@ -1,9 +1,4 @@
-import {
-  expandVariableAssignment,
-  LANGUAGE_SUFFIXES,
-  normalizeVarKey,
-  resolveVariableValue
-} from './variables'
+// Unused imports removed - these utilities are not needed in extraction.js
 
 // Helper function to strip rich text formatting while preserving variable pills
 export const stripRichTextForSync = (htmlText = '') => {

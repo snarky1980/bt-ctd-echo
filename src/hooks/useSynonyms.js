@@ -38,7 +38,7 @@ export function useSynonyms(query) {
     const found = Object.keys(SYNONYMS).find(k => k === t)
     if (!found) {
       // fallback: add close matches by startsWith to avoid explosion
-      for (const k of Object.keys(SYNONYONYMS)) {
+      for (const k of Object.keys(SYNONYMS)) {
         if (k.startsWith(t) || t.startsWith(k)) SYNONYMS[k].forEach(w => bag.add(normalize(w)))
       }
     }

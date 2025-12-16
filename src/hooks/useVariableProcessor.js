@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useCallback } from 'react'
 import { resolveVariableValue } from '../utils/variables.js'
 
 export function useVariableProcessor(variablesRef, templateLanguage) {

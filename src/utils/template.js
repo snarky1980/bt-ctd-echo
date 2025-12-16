@@ -1,4 +1,4 @@
-import { LANGUAGE_SUFFIXES, normalizeVarKey, resolveVariableValue } from './variables'
+import { LANGUAGE_SUFFIXES, normalizeVarKey } from './variables'
 import canonicalTemplatesRaw from '../../complete_email_templates.json'
 
 const hasText = (value) => typeof value === 'string' && value.trim().length > 0
