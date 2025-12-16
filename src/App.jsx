@@ -14,7 +14,7 @@ import { TemplateList } from './components/app/TemplateList.jsx';
 import { SearchAndFilter } from './components/app/SearchAndFilter.jsx';
 import { EditorPanel } from './components/app/EditorPanel.jsx'
 import { VariablesPanel } from './components/app/VariablesPanel.jsx'
-import { saveState, clearState } from './utils/storage.js'
+import { saveState, clearState, loadState, getDefaultState } from './utils/storage.js'
 import {
   extractVariablesFromPills,
   extractVariablesFromTemplate,
