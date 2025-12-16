@@ -1710,7 +1710,7 @@ function App () {
   const debouncedSearchQuery = useDebounce(searchQuery, 150)
 
   // Memoize search results for performance
-  const { filteredTemplates, searchMatchMap } = useTemplateSearch(
+  const { filteredTemplates, searchMatchMap, getMatchRanges, renderHighlighted: renderHighlightedFromHook } = useTemplateSearch(
     templatesData,
     debouncedSearchQuery,
     selectedCategory,
@@ -1720,8 +1720,8 @@ function App () {
 
   const renderHighlighted = useCallback((text, key) => {
     const ranges = getMatchRanges(key, text)
-    return renderHighlightedText(text, ranges)
-  }, [getMatchRanges, renderHighlightedText])
+    return renderHighlightedFromHook(text, ranges)
+  }, [getMatchRanges, renderHighlightedFromHook])
 
   const handleTemplateSelect = useCallback((templateId) => {
     const template = templatesData?.templates.find(t => t.id === templateId)
