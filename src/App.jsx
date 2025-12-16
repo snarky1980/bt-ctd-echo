@@ -23,6 +23,7 @@ import {
 } from './utils/extraction.js'
 import { applyAssignments } from './utils/template.js'
 import { expandVariableAssignment, normalizeVarKey } from './utils/variables.js'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './components/ui/tooltip.jsx'
 import AISidebar from './components/AISidebar'
 import HelpCenter from './components/HelpCenter.jsx'
 import echoLogo from './assets/echo-logo.svg'
