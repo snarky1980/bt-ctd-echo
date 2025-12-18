@@ -1,10 +1,11 @@
+// Interface texts by language - kept in sync with echo-bt-ctd-gestion
 export const interfaceTexts = {
   fr: {
-  title: 'echo',
+    title: 'echo',
     subtitle: 'Studio de modèles intelligents',
     selectTemplate: 'Sélectionnez un modèle',
     templatesCount: `modèles disponibles`,
-  searchPlaceholder: 'Rechercher un modèle...',
+    searchPlaceholder: 'Rechercher un modèle...',
     allCategories: 'Toutes les catégories',
     categories: {
       clarifications_and_client_instructions: 'Précisions et instructions client',
@@ -28,13 +29,13 @@ export const interfaceTexts = {
     copied: 'Copié !',
     copyLink: 'Copier le lien',
     copyLinkTitle: 'Copier le lien direct vers ce modèle',
-  openInOutlookClassic: 'Ouvrir dans Outlook classique',
-  openInOutlookClassicTitle: 'Composer avec Outlook classique',
-  openInOutlookWeb: 'Ouvrir dans Outlook Web',
-  openInOutlookWebTitle: 'Composer avec Outlook Web',
+    openInOutlookClassic: 'Ouvrir dans Outlook classique',
+    openInOutlookClassicTitle: 'Composer avec Outlook classique',
+    openInOutlookWeb: 'Ouvrir dans Outlook Web',
+    openInOutlookWebTitle: 'Composer avec Outlook Web',
     sendEmail: 'Envoyer',
-  favorites: 'Favoris',
-  showFavoritesOnly: 'Afficher uniquement les favoris',
+    favorites: 'Favoris',
+    showFavoritesOnly: 'Afficher uniquement les favoris',
     noTemplate: 'Sélectionnez un modèle pour commencer',
     resetWarningTitle: 'Confirmer la réinitialisation',
     resetWarningMessage: 'Êtes-vous sûr de vouloir réinitialiser toutes les variables ? Cette action ne peut pas être annulée.',
@@ -42,11 +43,11 @@ export const interfaceTexts = {
     confirm: 'Confirmer'
   },
   en: {
-  title: 'echo',
+    title: 'echo',
     subtitle: 'Smart Template Studio',
     selectTemplate: 'Select a template',
     templatesCount: `templates available`,
-  searchPlaceholder: 'Search for a template...',
+    searchPlaceholder: 'Search for a template...',
     allCategories: 'All categories',
     categories: {
       clarifications_and_client_instructions: 'Clarifications and client instructions',
@@ -70,17 +71,17 @@ export const interfaceTexts = {
     copied: 'Copied!',
     copyLink: 'Copy link',
     copyLinkTitle: 'Copy direct link to this template',
-  openInOutlookClassic: 'Open in Outlook Classic',
-  openInOutlookClassicTitle: 'Compose in Outlook Classic',
-  openInOutlookWeb: 'Open in Outlook Web',
-  openInOutlookWebTitle: 'Compose in Outlook Web',
+    openInOutlookClassic: 'Open in Outlook Classic',
+    openInOutlookClassicTitle: 'Compose in Outlook Classic',
+    openInOutlookWeb: 'Open in Outlook Web',
+    openInOutlookWebTitle: 'Compose in Outlook Web',
     sendEmail: 'Send',
-  favorites: 'Favorites',
-  showFavoritesOnly: 'Show only favorites',
+    favorites: 'Favorites',
+    showFavoritesOnly: 'Show only favorites',
     noTemplate: 'Select a template to get started',
     resetWarningTitle: 'Confirm Reset',
     resetWarningMessage: 'Are you sure you want to reset all variables? This action cannot be undone.',
     cancel: 'Cancel',
     confirm: 'Confirm'
   }
-};
+}
