@@ -95,7 +95,7 @@ const copyStaticFilesPlugin = {
 }
 
 export default defineConfig(({ mode }) => {
-  const base = '/echo-bt-ctd/gestion/';
+  const base = '/echo-bt-ctd/';
   
   return {
     base: mode === 'production' ? base : '/',
