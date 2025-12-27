@@ -361,6 +361,9 @@ function App() {
   const [showVariablePopup, setShowVariablePopup] = useState(false)
   const [showHelpCenter, setShowHelpCenter] = useState(false)
   const [showAIPanel, setShowAIPanel] = useState(false)
+  const [showAdminModal, setShowAdminModal] = useState(false)
+  const [adminPassword, setAdminPassword] = useState('')
+  const [adminError, setAdminError] = useState('')
   const [preferPopout, setPreferPopout] = useState(() => {
     try { return localStorage.getItem('ea_prefer_popout') === 'true' } catch { return false }
   })
@@ -814,6 +817,42 @@ function App() {
       }
     }
   }, [preferPopout, selectedTemplate, templateLanguage])
+
+  // Admin authentication - same hash as admin-simple.js
+  const ADMIN_PASSWORD_HASH = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3' // "123" - CHANGE THIS!
+  
+  const handleAdminLogin = useCallback(async () => {
+    if (!adminPassword) {
+      setAdminError(interfaceLanguage === 'fr' ? 'Veuillez entrer un mot de passe' : 'Please enter a password')
+      return
+    }
+    
+    try {
+      const encoder = new TextEncoder()
+      const data = encoder.encode(adminPassword)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      const hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+      
+      if (hash === ADMIN_PASSWORD_HASH) {
+        // Store auth in sessionStorage (expires on browser close)
+        sessionStorage.setItem('ea_admin_auth', 'true')
+        setShowAdminModal(false)
+        setAdminPassword('')
+        setAdminError('')
+        
+        // Open admin console
+        const adminUrl = new URL('./admin/admin-simple.html', window.location.href).href
+        window.open(adminUrl, '_blank', 'noopener')
+      } else {
+        setAdminError(interfaceLanguage === 'fr' ? 'Mot de passe incorrect' : 'Incorrect password')
+        setAdminPassword('')
+      }
+    } catch (e) {
+      console.error('Admin auth error:', e)
+      setAdminError(interfaceLanguage === 'fr' ? 'Erreur d\'authentification' : 'Authentication error')
+    }
+  }, [adminPassword, interfaceLanguage])
 
   // Setup BroadcastChannel for variables syncing
   useEffect(() => {
@@ -3204,6 +3243,98 @@ ${cleanBodyHtml}
     </svg>
     <span>{interfaceLanguage === 'fr' ? 'Aide' : 'Help'}</span>
   </Button>
+
+  {/* Fixed Admin button - bottom-left corner (discreet) */}
+  <Button
+    onClick={() => {
+      // Check if already authenticated
+      if (sessionStorage.getItem('ea_admin_auth') === 'true') {
+        const adminUrl = new URL('./admin/admin-simple.html', window.location.href).href
+        window.open(adminUrl, '_blank', 'noopener')
+      } else {
+        setShowAdminModal(true)
+        setAdminPassword('')
+        setAdminError('')
+      }
+    }}
+    variant="ghost"
+    className="fixed bottom-4 left-4 z-40 inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium opacity-40 hover:opacity-100 transition-opacity"
+    style={{ color: '#64748b' }}
+    title={interfaceLanguage === 'fr' ? 'Console Admin' : 'Admin Console'}
+  >
+    <Settings className="h-4 w-4" />
+    <span className="hidden sm:inline">Admin</span>
+  </Button>
+
+  {/* Admin Login Modal */}
+  {showAdminModal && (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          setShowAdminModal(false)
+          setAdminPassword('')
+          setAdminError('')
+        }
+      }}
+    >
+      <div className="bg-white rounded-2xl shadow-2xl w-[380px] max-w-[90vw] overflow-hidden">
+        <div className="px-6 pt-6 pb-4 text-center">
+          <div className="text-4xl mb-3">🔐</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-1">
+            {interfaceLanguage === 'fr' ? 'Console Admin' : 'Admin Console'}
+          </h2>
+          <p className="text-sm text-gray-500">
+            {interfaceLanguage === 'fr' ? 'Accès réservé aux administrateurs' : 'Administrators only'}
+          </p>
+        </div>
+        
+        <div className="px-6 pb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {interfaceLanguage === 'fr' ? 'Mot de passe' : 'Password'}
+          </label>
+          <input
+            type="password"
+            value={adminPassword}
+            onChange={(e) => setAdminPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                handleAdminLogin()
+              }
+            }}
+            className="w-full px-4 py-3 text-base border-2 border-gray-200 rounded-xl focus:outline-none focus:border-teal-500 transition-colors"
+            placeholder={interfaceLanguage === 'fr' ? 'Entrez le mot de passe' : 'Enter password'}
+            autoFocus
+          />
+          {adminError && (
+            <p className="mt-2 text-sm text-red-600">{adminError}</p>
+          )}
+          
+          <div className="flex gap-3 mt-5">
+            <Button
+              variant="outline"
+              className="flex-1 py-3 rounded-xl font-semibold"
+              onClick={() => {
+                setShowAdminModal(false)
+                setAdminPassword('')
+                setAdminError('')
+              }}
+            >
+              {interfaceLanguage === 'fr' ? 'Annuler' : 'Cancel'}
+            </Button>
+            <Button
+              className="flex-1 py-3 rounded-xl font-semibold text-white"
+              style={{ backgroundColor: '#059669' }}
+              onClick={handleAdminLogin}
+            >
+              {interfaceLanguage === 'fr' ? 'Se connecter' : 'Login'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
 
   {/* Main content with resizable panes - full width */}
   <main className="w-full max-w-none px-3 sm:px-4 lg:px-6 py-5 pb-24">
