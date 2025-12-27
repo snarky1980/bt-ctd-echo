@@ -573,8 +573,8 @@
       </main>
     </div>
 
-    <script src="./assets/rich-text-toolbar.js"></script>
-    <script src="./assets/admin-simple.js"></script>
+    <script src="../assets/rich-text-toolbar.js"></script>
+    <script src="../assets/admin-simple.js"></script>
     <script>
       // Lightweight badge population: fetch raw main JSON headers quickly
       (async function(){
@@ -588,7 +588,7 @@
           if (window.location.hostname === 'snarky1980.github.io') {
             addUrl(`https://snarky1980.github.io/echo-bt-ctd-gestion/complete_email_templates.json?t=${Date.now()}`);
           }
-          addUrl(`./complete_email_templates.json?t=${Date.now()}`);
+          addUrl(`../complete_email_templates.json?t=${Date.now()}`);
           if (origin) {
             if (basePath && basePath !== '') addUrl(`${origin}${basePath}/complete_email_templates.json?t=${Date.now()}`);
             addUrl(`${origin}/complete_email_templates.json?t=${Date.now()}`);
