@@ -16,13 +16,13 @@ ECHO est une **application web de type SPA** (*Single Page Application* - applic
 
 ### Points saillants
 
-|  Aspect  |  Évaluation  |  Détail  |
-| -------- | ------------ | -------- |
-|  **Sécurité**  |  ✅ Excellente  |  Architecture *zero-trust* côté client  |
-|  **Coût d'exploitation**  |  ✅ Nul  |  Hébergement statique gratuit  |
-|  **Facilité d'adoption**  |  ✅ Élevée  |  Aucune formation requise  |
-|  **Maintenabilité**  |  ✅ Simple  |  Mise à jour des modèles sans intervention TI  |
-|  **Conformité**  |  ✅ Conforme  |  Respecte LPRPDE et politiques du SCT  |
+| Aspect | Évaluation | Détail |
+| ------ | ---------- | ------ |
+| **Sécurité** | ✅ Excellente | Architecture *zero-trust* côté client |
+| **Coût d'exploitation** | ✅ Nul | Hébergement statique gratuit |
+| **Facilité d'adoption** | ✅ Élevée | Aucune formation requise |
+| **Maintenabilité** | ✅ Simple | Mise à jour des modèles sans intervention TI |
+| **Conformité** | ✅ Conforme | Respecte LPRPDE et politiques du SCT |
 
 ---
 
@@ -32,13 +32,13 @@ ECHO est une **application web de type SPA** (*Single Page Application* - applic
 
 Les employés doivent régulièrement envoyer des communications standardisées (confirmations, suivis, réponses types). Le processus actuel présente plusieurs inefficacités:
 
-|  Problème  |  Impact  |  Fréquence  |
-| ---------- | -------- | ----------- |
-|  Recherche de modèles dans les dossiers personnels  |  Perte de temps  |  Quotidienne  |
-|  Versions multiples et obsolètes en circulation  |  Incohérence  |  Hebdomadaire  |
-|  Copier-coller manuel avec modifications  |  Erreurs  |  Quotidienne  |
-|  Formatage incohérent entre les agents  |  Image de marque diluée  |  Constante  |
-|  Traduction manuelle FR↔EN  |  Duplication d'efforts  |  Quotidienne  |
+| Problème | Impact | Fréquence |
+| -------- | ------ | --------- |
+| Recherche de modèles dans les dossiers personnels | Perte de temps | Quotidienne |
+| Versions multiples et obsolètes en circulation | Incohérence | Hebdomadaire |
+| Copier-coller manuel avec modifications | Erreurs | Quotidienne |
+| Formatage incohérent entre les agents | Image de marque diluée | Constante |
+| Traduction manuelle FR↔EN | Duplication d'efforts | Quotidienne |
 
 ### 1.2 Coût de l'inefficacité (estimé)
 
