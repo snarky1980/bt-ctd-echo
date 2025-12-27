@@ -1,4 +1,5 @@
 # ECHO - Rapport exécutif détaillé
+
 ## Application de gestion de modèles de courriels
 
 **Classification:** Document interne  
@@ -15,13 +16,13 @@ ECHO est une **application web de type SPA** (*Single Page Application* - applic
 
 ### Points saillants
 
-| Aspect | Évaluation | Détail |
-|--------|------------|--------|
-| **Sécurité** | ✅ Excellente | Architecture *zero-trust* côté client |
-| **Coût d'exploitation** | ✅ Nul | Hébergement statique gratuit |
-| **Facilité d'adoption** | ✅ Élevée | Aucune formation requise |
-| **Maintenabilité** | ✅ Simple | Mise à jour des modèles sans intervention TI |
-| **Conformité** | ✅ Conforme | Respecte LPRPDE et politiques du SCT |
+|  Aspect  |  Évaluation  |  Détail  |
+| -------- | ------------ | -------- |
+|  **Sécurité**  |  ✅ Excellente  |  Architecture *zero-trust* côté client  |
+|  **Coût d'exploitation**  |  ✅ Nul  |  Hébergement statique gratuit  |
+|  **Facilité d'adoption**  |  ✅ Élevée  |  Aucune formation requise  |
+|  **Maintenabilité**  |  ✅ Simple  |  Mise à jour des modèles sans intervention TI  |
+|  **Conformité**  |  ✅ Conforme  |  Respecte LPRPDE et politiques du SCT  |
 
 ---
 
@@ -31,19 +32,19 @@ ECHO est une **application web de type SPA** (*Single Page Application* - applic
 
 Les employés doivent régulièrement envoyer des communications standardisées (confirmations, suivis, réponses types). Le processus actuel présente plusieurs inefficacités:
 
-| Problème | Impact | Fréquence |
-|----------|--------|-----------|
-| Recherche de modèles dans les dossiers personnels | Perte de temps | Quotidienne |
-| Versions multiples et obsolètes en circulation | Incohérence | Hebdomadaire |
-| Copier-coller manuel avec modifications | Erreurs | Quotidienne |
-| Formatage incohérent entre les agents | Image de marque diluée | Constante |
-| Traduction manuelle FR↔EN | Duplication d'efforts | Quotidienne |
+|  Problème  |  Impact  |  Fréquence  |
+| ---------- | -------- | ----------- |
+|  Recherche de modèles dans les dossiers personnels  |  Perte de temps  |  Quotidienne  |
+|  Versions multiples et obsolètes en circulation  |  Incohérence  |  Hebdomadaire  |
+|  Copier-coller manuel avec modifications  |  Erreurs  |  Quotidienne  |
+|  Formatage incohérent entre les agents  |  Image de marque diluée  |  Constante  |
+|  Traduction manuelle FR↔EN  |  Duplication d'efforts  |  Quotidienne  |
 
 ### 1.2 Coût de l'inefficacité (estimé)
 
 Pour une équipe de 10 agents traitant en moyenne 5 courriels standardisés par jour:
 
-```
+```text
 Temps actuel par courriel:     15-20 minutes (recherche + adaptation + vérification)
 Temps avec ECHO:               2-3 minutes (sélection + variables + copie)
 Économie par courriel:         ~15 minutes
@@ -55,7 +56,7 @@ Calcul annuel (250 jours ouvrables):
 └── Équivalent ETP*:           ~1.5 employé à temps plein
 
 *ETP = Équivalent Temps Plein (basé sur 2,080 heures/an)
-```
+```text
 
 ---
 
@@ -102,7 +103,7 @@ ECHO est un **système de gestion de modèles de courriels** (*Email Template Ma
 
 ### 2.3 Flux de travail utilisateur
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        PARCOURS UTILISATEUR ECHO                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -126,7 +127,7 @@ ECHO est un **système de gestion de modèles de courriels** (*Email Template Ma
 │                      (vs 15-20 minutes auparavant)                          │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 
@@ -138,7 +139,7 @@ ECHO utilise une architecture **JAMstack** (*JavaScript, APIs, Markup*):
 
 > **JAMstack**: Architecture moderne où le site web est pré-généré sous forme de fichiers statiques. Contrairement aux sites traditionnels qui génèrent les pages à chaque visite (comme WordPress), tout est déjà prêt. C'est plus rapide, plus sécuritaire et moins coûteux.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        ARCHITECTURE ECHO (JAMstack)                          │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -187,30 +188,30 @@ ECHO utilise une architecture **JAMstack** (*JavaScript, APIs, Markup*):
 │  ❌ AUCUNE API BACKEND (pas d'endpoints à sécuriser)                        │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 3.2 Technologies utilisées
 
-| Composant | Technologie | Rôle | Pourquoi ce choix |
-|-----------|-------------|------|-------------------|
-| **Framework** | React 18 | Structure de l'application | Standard de l'industrie, maintenu par Meta |
-| **Build tool** | Vite | Compilation et optimisation | Rapide, moderne, support TypeScript |
-| **UI Components** | Radix UI | Composants d'interface | Accessibilité (WCAG) intégrée |
-| **Styles** | Tailwind CSS | Mise en forme | Maintenable, fichiers CSS légers |
-| **Recherche** | Fuse.js | Recherche floue | Performance, fonctionne hors-ligne |
-| **Éditeur** | Lexical | Éditeur de texte riche | Créé par Meta, extensible |
-| **Hébergement** | GitHub Pages | Serveur web | Gratuit, CDN mondial, SSL inclus |
+|  Composant  |  Technologie  |  Rôle  | Pourquoi ce choix |
+| ----------- | ------------- | ------ |-------------------|
+|  **Framework**  |  React 18  |  Structure de l'application  | Standard de l'industrie, maintenu par Meta |
+|  **Build tool**  |  Vite  |  Compilation et optimisation  | Rapide, moderne, support TypeScript |
+|  **UI Components**  |  Radix UI  |  Composants d'interface  | Accessibilité (WCAG) intégrée |
+|  **Styles**  |  Tailwind CSS  |  Mise en forme  | Maintenable, fichiers CSS légers |
+|  **Recherche**  |  Fuse.js  |  Recherche floue  | Performance, fonctionne hors-ligne |
+|  **Éditeur**  |  Lexical  |  Éditeur de texte riche  | Créé par Meta, extensible |
+|  **Hébergement**  |  GitHub Pages  |  Serveur web  | Gratuit, CDN mondial, SSL inclus |
 
 > **CDN** (*Content Delivery Network*): Réseau de serveurs répartis géographiquement qui livrent le contenu depuis le serveur le plus proche de l'utilisateur. Résultat: chargement très rapide peu importe où on se trouve.
 
 ### 3.3 Taille et performance
 
-| Ressource | Taille | Temps de chargement* |
-|-----------|--------|---------------------|
-| Application (JS compilé) | ~320 KB | < 1 sec |
-| Styles (CSS) | ~45 KB | < 0.2 sec |
-| Modèles de courriels | ~85 KB | < 0.3 sec |
-| **Total** | **~450 KB** | **< 2 sec** |
+|  Ressource  |  Taille  |  Temps de chargement*  |
+| ----------- | -------- | --------------------- |
+|  Application (JS compilé)  |  ~320 KB  |  < 1 sec  |
+|  Styles (CSS)  |  ~45 KB  |  < 0.2 sec  |
+|  Modèles de courriels  |  ~85 KB  |  < 0.3 sec  |
+|  **Total**  |  **~450 KB**  |  **< 2 sec**  |
 
 *Sur connexion standard (10 Mbps). Après le premier chargement, l'application est **mise en cache** (stockée localement) et se charge quasi-instantanément.
 
@@ -234,7 +235,7 @@ ECHO adopte une approche de sécurité par conception (*Security by Design*) où
 
 ### 4.2 Flux de données - Ce qui se passe vraiment
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                          ANALYSE DU FLUX DE DONNÉES                          │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -286,44 +287,44 @@ ECHO adopte une approche de sécurité par conception (*Security by Design*) où
 │  ✅ ECHO est une application "read-only" du point de vue réseau             │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 4.3 Matrice des risques
 
-| # | Menace | Probabilité | Impact | Risque résiduel | Justification |
-|---|--------|-------------|--------|-----------------|---------------|
-| 1 | Vol de données utilisateur | Impossible | N/A | **NUL** | Aucune donnée collectée |
-| 2 | Injection de code malveillant (XSS) | Très faible | Faible | **TRÈS FAIBLE** | Entrées échappées, pas de HTML dynamique |
-| 3 | Compromission du serveur | Faible | Faible | **FAIBLE** | Fichiers statiques seulement, rien à voler |
-| 4 | Interception réseau (MITM) | Très faible | Négligeable | **NÉGLIGEABLE** | HTTPS + données publiques uniquement |
-| 5 | Déni de service (DoS) | Faible | Faible | **FAIBLE** | CDN GitHub avec protection DDoS |
-| 6 | Modification des modèles | Faible | Moyen | **FAIBLE** | Contrôle Git + processus de review |
+|  #  |  Menace  |  Probabilité  | Impact | Risque résiduel | Justification |
+| --- | -------- | ------------- |--------|-----------------|---------------|
+|  1  |  Vol de données utilisateur  |  Impossible  | N/A | **NUL** | Aucune donnée collectée |
+|  2  |  Injection de code malveillant (XSS)  |  Très faible  | Faible | **TRÈS FAIBLE** | Entrées échappées, pas de HTML dynamique |
+|  3  |  Compromission du serveur  |  Faible  | Faible | **FAIBLE** | Fichiers statiques seulement, rien à voler |
+|  4  |  Interception réseau (MITM)  |  Très faible  | Négligeable | **NÉGLIGEABLE** | HTTPS + données publiques uniquement |
+|  5  |  Déni de service (DoS)  |  Faible  | Faible | **FAIBLE** | CDN GitHub avec protection DDoS |
+|  6  |  Modification des modèles  |  Faible  | Moyen | **FAIBLE** | Contrôle Git + processus de review |
 
 ### 4.4 Conformité réglementaire
 
 #### LPRPDE (Loi sur la protection des renseignements personnels)
 
-| Exigence | Statut | Justification |
-|----------|--------|---------------|
-| Collecte limitée | ✅ N/A | Aucune collecte |
-| Consentement | ✅ N/A | Rien à consentir |
-| Conservation | ✅ N/A | Rien conservé |
-| Divulgation | ✅ N/A | Rien à divulguer |
+|  Exigence  |  Statut  |  Justification  |
+| ---------- | -------- | --------------- |
+|  Collecte limitée  |  ✅ N/A  |  Aucune collecte  |
+|  Consentement  |  ✅ N/A  |  Rien à consentir  |
+|  Conservation  |  ✅ N/A  |  Rien conservé  |
+|  Divulgation  |  ✅ N/A  |  Rien à divulguer  |
 
 #### Directive sur la gestion de la sécurité (SCT)
 
-| Contrôle | Applicabilité | Conformité |
-|----------|---------------|------------|
-| Classification des données | Non classifié | ✅ |
-| Chiffrement en transit | HTTPS/TLS 1.3 | ✅ |
-| Contrôle d'accès | N/A (public) | ✅ |
-| Journalisation | Logs navigateur disponibles | ✅ |
+|  Contrôle  |  Applicabilité  |  Conformité  |
+| ---------- | --------------- | ------------ |
+|  Classification des données  |  Non classifié  |  ✅  |
+|  Chiffrement en transit  |  HTTPS/TLS 1.3  |  ✅  |
+|  Contrôle d'accès  |  N/A (public)  |  ✅  |
+|  Journalisation  |  Logs navigateur disponibles  |  ✅  |
 
 ### 4.5 Module IA (optionnel) - Considérations spéciales
 
 > ⚠️ **Note importante**: La fonctionnalité d'assistance IA est **désactivée par défaut**. Elle ne s'active que si un utilisateur entre manuellement sa propre clé API OpenAI.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    MODULE IA (OPTIONNEL)                         │
 ├─────────────────────────────────────────────────────────────────┤
@@ -348,7 +349,7 @@ ECHO adopte une approche de sécurité par conception (*Security by Design*) où
 │            ➜ Risque IA: TRÈS FAIBLE                             │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 
@@ -356,38 +357,38 @@ ECHO adopte une approche de sécurité par conception (*Security by Design*) où
 
 ### 5.1 Options de déploiement
 
-| Option | Coût | Contrôle | Délai | Recommandation |
-|--------|------|----------|-------|----------------|
-| **GitHub Pages** (actuel) | Gratuit | Modéré | Immédiat | ✅ Phase initiale |
-| **Serveur web interne** | Variable | Total | 1-2 sem | ✅ Phase 2 si requis |
-| **Azure Static Web Apps** | ~10$/mois | Élevé | 1 sem | Alternatif cloud GC |
+|  Option  |  Coût  |  Contrôle  | Délai | Recommandation |
+| -------- | ------ | ---------- |-------|----------------|
+|  **GitHub Pages** (actuel)  |  Gratuit  |  Modéré  | Immédiat | ✅ Phase initiale |
+|  **Serveur web interne**  |  Variable  |  Total  | 1-2 sem | ✅ Phase 2 si requis |
+|  **Azure Static Web Apps**  |  ~10$/mois  |  Élevé  | 1 sem | Alternatif cloud GC |
 
 ### 5.2 Configuration actuelle (GitHub Pages)
 
-```
+```text
 Domaine: www.bt-tb.ca/echo-bt-ctd/gestion
 Hébergement: GitHub Pages (infrastructure Microsoft)
 SSL/TLS: Certificat automatique Let's Encrypt
 CDN: Fastly (inclus avec GitHub Pages)
 Disponibilité: 99.9% SLA
-```
+```text
 
 ### 5.3 Processus de mise à jour
 
 #### Mise à jour des modèles de courriels (sans intervention TI)
 
-```
+```text
 1. Modifier le fichier complete_email_templates.json
 2. Commiter et pousser vers GitHub
 3. ✅ Les changements sont en ligne en ~2 minutes
 
 Qui peut le faire: Gestionnaire de contenu avec accès GitHub
 Formation requise: ~30 minutes
-```
+```text
 
 #### Mise à jour de l'application (intervention TI)
 
-```
+```text
 1. Modifier le code source
 2. Tester localement (npm run dev)
 3. Compiler (npm run build)
@@ -396,7 +397,7 @@ Formation requise: ~30 minutes
 
 Qui peut le faire: Développeur ou équipe TI
 Fréquence anticipée: Mensuelle ou moins
-```
+```text
 
 ---
 
@@ -404,16 +405,16 @@ Fréquence anticipée: Mensuelle ou moins
 
 ### 6.1 Phases de déploiement recommandées
 
-| Phase | Description | Durée | Livrables |
-|-------|-------------|-------|-----------|
-| **1. Pilote** | Test avec équipe restreinte (5-10 personnes) | 2 semaines | Rétroaction, ajustements |
-| **2. Validation** | Revue des modèles par les gestionnaires | 1 semaine | Modèles approuvés |
-| **3. Déploiement** | Communication et accès à tous | 1 semaine | Guide utilisateur |
-| **4. Optimisation** | Collecte de suggestions, améliorations | Continu | Nouvelles fonctionnalités |
+|  Phase  |  Description  |  Durée  | Livrables |
+| ------- | ------------- | ------- |-----------|
+|  **1. Pilote**  |  Test avec équipe restreinte (5-10 personnes)  |  2 semaines  | Rétroaction, ajustements |
+|  **2. Validation**  |  Revue des modèles par les gestionnaires  |  1 semaine  | Modèles approuvés |
+|  **3. Déploiement**  |  Communication et accès à tous  |  1 semaine  | Guide utilisateur |
+|  **4. Optimisation**  |  Collecte de suggestions, améliorations  |  Continu  | Nouvelles fonctionnalités |
 
 ### 6.2 Modèle de gouvernance proposé
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                     GOUVERNANCE ECHO                             │
 ├─────────────────────────────────────────────────────────────────┤
@@ -434,16 +435,16 @@ Fréquence anticipée: Mensuelle ou moins
 │      └── Gère l'infrastructure si migration                     │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 6.3 Indicateurs de performance (KPIs)
 
-| Indicateur | Méthode de mesure | Cible |
-|------------|-------------------|-------|
-| **Taux d'adoption** | Sondage utilisateurs | > 80% après 1 mois |
-| **Satisfaction** | Sondage post-déploiement | > 4/5 |
-| **Temps économisé** | Auto-déclaration | > 10 min/courriel |
-| **Erreurs signalées** | Tickets de support | < 5/mois |
+|  Indicateur  |  Méthode de mesure  |  Cible  |
+| ------------ | ------------------- | ------- |
+|  **Taux d'adoption**  |  Sondage utilisateurs  |  > 80% après 1 mois  |
+|  **Satisfaction**  |  Sondage post-déploiement  |  > 4/5  |
+|  **Temps économisé**  |  Auto-déclaration  |  > 10 min/courriel  |
+|  **Erreurs signalées**  |  Tickets de support  |  < 5/mois  |
 
 ---
 
@@ -480,13 +481,13 @@ Fréquence anticipée: Mensuelle ou moins
 
 ### Synthèse de l'évaluation
 
-| Critère | Évaluation | Commentaire |
-|---------|------------|-------------|
-| **Valeur ajoutée** | ⭐⭐⭐⭐⭐ | Gains de productivité mesurables |
-| **Sécurité** | ⭐⭐⭐⭐⭐ | Risque quasi-nul par conception |
-| **Coût total de possession** | ⭐⭐⭐⭐⭐ | Gratuit, maintenance minimale |
-| **Facilité d'adoption** | ⭐⭐⭐⭐⭐ | Intuitif, aucune formation |
-| **Maintenabilité** | ⭐⭐⭐⭐ | Modèles faciles à modifier |
+|  Critère  |  Évaluation  |  Commentaire  |
+| --------- | ------------ | ------------- |
+|  **Valeur ajoutée**  |  ⭐⭐⭐⭐⭐  |  Gains de productivité mesurables  |
+|  **Sécurité**  |  ⭐⭐⭐⭐⭐  |  Risque quasi-nul par conception  |
+|  **Coût total de possession**  |  ⭐⭐⭐⭐⭐  |  Gratuit, maintenance minimale  |
+|  **Facilité d'adoption**  |  ⭐⭐⭐⭐⭐  |  Intuitif, aucune formation  |
+|  **Maintenabilité**  |  ⭐⭐⭐⭐  |  Modèles faciles à modifier  |
 
 ### Recommandation finale
 
@@ -496,14 +497,14 @@ L'application ECHO répond aux critères de sécurité, d'efficacité et de faci
 
 ### Prochaines étapes
 
-| # | Action | Responsable | Échéance |
-|---|--------|-------------|----------|
-| 1 | Valider les modèles de courriels actuels | Propriétaire fonctionnel | Semaine 1 |
-| 2 | Identifier le groupe pilote | Gestionnaire | Semaine 1 |
-| 3 | Communiquer le déploiement | Communications | Semaine 2 |
-| 4 | Lancer le pilote | Équipe projet | Semaine 2 |
-| 5 | Recueillir la rétroaction | Tous | Semaines 3-4 |
-| 6 | Déploiement complet | Équipe projet | Semaine 5 |
+|  #  |  Action  |  Responsable  | Échéance |
+| --- | -------- | ------------- |----------|
+|  1  |  Valider les modèles de courriels actuels  |  Propriétaire fonctionnel  | Semaine 1 |
+|  2  |  Identifier le groupe pilote  |  Gestionnaire  | Semaine 1 |
+|  3  |  Communiquer le déploiement  |  Communications  | Semaine 2 |
+|  4  |  Lancer le pilote  |  Équipe projet  | Semaine 2 |
+|  5  |  Recueillir la rétroaction  |  Tous  | Semaines 3-4 |
+|  6  |  Déploiement complet  |  Équipe projet  | Semaine 5 |
 
 ---
 
@@ -525,11 +526,11 @@ L'application ECHO répond aux critères de sécurité, d'efficacité et de faci
 
 ### B. Contacts
 
-| Rôle | Nom | Courriel |
-|------|-----|----------|
-| Propriétaire fonctionnel | [À définir] | |
-| Gestionnaire de contenu | [À définir] | |
-| Support technique | [À définir] | |
+|  Rôle  |  Nom  |  Courriel  |
+| ------ | ----- | ---------- |
+|  Propriétaire fonctionnel  |  [À définir]  |   |
+|  Gestionnaire de contenu  |  [À définir]  |   |
+|  Support technique  |  [À définir]  |   |
 
 ---
 

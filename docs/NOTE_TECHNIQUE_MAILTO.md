@@ -2,7 +2,7 @@
 
 **Date** : 27 décembre 2025  
 **Objet** : Analyse de sécurité de la fonction mailto dans ECHO  
-**Destinataire** : Gestion  
+**Destinataire** : Gestion
 
 ---
 
@@ -16,7 +16,7 @@ La fonction « Ouvrir dans un courriel » utilise le protocole standard `mailto:
 
 ### Ce que fait la fonction
 
-```
+```text
 Texte saisi par l'usager → URL mailto: encodée → Navigateur → Outlook ouvre un BROUILLON
 ```
 
@@ -29,7 +29,7 @@ Texte saisi par l'usager → URL mailto: encodée → Navigateur → Outlook ouv
 ### Ce que la fonction NE PEUT PAS faire
 
 | Action | Possible ? |
-|--------|------------|
+| ------ | ---------- |
 | Envoyer un courriel automatiquement | ❌ Non |
 | Accéder au carnet d'adresses | ❌ Non |
 | Créer plusieurs courriels en boucle | ❌ Non |
@@ -41,6 +41,7 @@ Texte saisi par l'usager → URL mailto: encodée → Navigateur → Outlook ouv
 ## Analyse du scénario de menace
 
 ### Crainte exprimée
+
 > « Un hacker pourrait créer des courriels en masse pour flooder le système »
 
 ### Pourquoi ce scénario est techniquement impossible
@@ -86,7 +87,7 @@ Les usagers peuvent utiliser la fonction **« Copier Tout »** comme alternative
 ## Conclusion
 
 | Question | Réponse |
-|----------|---------|
+| -------- | ------- |
 | La fonction mailto représente-t-elle un risque ? | Non |
 | Un attaquant peut-il l'exploiter pour du spam ? | Non |
 | La retirer améliore-t-elle la sécurité ? | Non |
