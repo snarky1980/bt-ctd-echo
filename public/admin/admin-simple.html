@@ -410,8 +410,11 @@
           </section>
 
           <section style="margin-bottom:24px">
-            <h3 style="color:#0f172a;font-size:16px;font-weight:700;margin:0 0 12px">🔐 Sécurité et stockage</h3>
+            <h3 style="color:#0f172a;font-size:16px;font-weight:700;margin:0 0 12px">🔐 Sécurité et accès</h3>
             <ul style="margin:0;padding-left:20px;color:#334155;line-height:1.7">
+              <li><strong>Authentification requise</strong> : mot de passe demandé à chaque session (hash SHA-256)</li>
+              <li><strong>Session temporaire</strong> : l'authentification expire à la fermeture du navigateur (sessionStorage)</li>
+              <li><strong>Accès depuis l'app principale</strong> : bouton Admin discret en bas à gauche (visible pour tous, protégé par mot de passe)</li>
               <li><strong>Brouillon local</strong> : toutes les modifications sont sauvegardées dans le navigateur (localStorage)</li>
               <li><strong>Pas de synchronisation automatique</strong> : les changements ne sont visibles publiquement qu'après publication GitHub</li>
               <li><strong>Token GitHub</strong> : 
@@ -421,7 +424,7 @@
                   <li>Configuré automatiquement au premier clic sur "Publier sur GitHub"</li>
                 </ul>
               </li>
-              <li><strong>Accès restreint</strong> : cette console est protégée par <code>noindex, nofollow</code> et non liée depuis l'app web</li>
+              <li><strong>Indicateur de sauvegarde</strong> : badge visuel en bas à droite confirme chaque enregistrement local</li>
             </ul>
           </section>
 
@@ -434,6 +437,7 @@
               <li><strong>Nommer clairement les variables</strong> pour que les utilisateurs comprennent leur fonction</li>
               <li><strong>Exporter en Excel</strong> avant modifications majeures comme backup de sécurité</li>
               <li><strong>Éviter de recharger depuis GitHub</strong> si vous avez des modifications non publiées</li>
+              <li><strong>Confirmer avant suppression</strong> : un modal demande confirmation avec le nom du modèle – action irréversible</li>
             </ul>
           </section>
 

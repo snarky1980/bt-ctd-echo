@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { LifeBuoy, Lightbulb, BookOpen, AlertTriangle, MessageCircle, ExternalLink, Mail, X, CheckCircle2, Loader2, Copy, Star, Shield, Sparkles } from 'lucide-react'
+import { LifeBuoy, Lightbulb, BookOpen, AlertTriangle, MessageCircle, ExternalLink, Mail, X, CheckCircle2, Loader2, Copy, Star, Shield, Sparkles, Settings } from 'lucide-react'
 import { Button } from './ui/button.jsx'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx'
 import { ScrollArea } from './ui/scroll-area.jsx'
@@ -73,6 +73,15 @@ const translations = {
           ['Ctrl/Cmd + /', 'Focus sur la recherche'],
           ['Ctrl/Cmd + R (Variables)', 'Réinitialiser aux exemples'],
           ['Ctrl/Cmd + Shift + V (Variables)', 'Collage intelligent var: valeur']
+        ]
+      },
+      admin: {
+        heading: 'Console d\'administration',
+        points: [
+          'Un bouton Admin discret est disponible en bas à gauche de la page principale.',
+          'L\'accès à la console est protégé par mot de passe (demandez-le à votre gestionnaire).',
+          'La console permet de créer, modifier et supprimer des modèles de courriels.',
+          'Les modifications doivent être publiées sur GitHub pour être visibles par tous les utilisateurs.'
         ]
       },
       privacy: {
@@ -247,6 +256,15 @@ const translations = {
           ['Ctrl/Cmd + /', 'Focus search'],
           ['Ctrl/Cmd + R (Variables)', 'Reset to examples'],
           ['Ctrl/Cmd + Shift + V (Variables)', 'Smart paste var: value']
+        ]
+      },
+      admin: {
+        heading: 'Admin Console',
+        points: [
+          'A discreet Admin button is available at the bottom-left of the main page.',
+          'Console access is password-protected (ask your manager for credentials).',
+          'The console allows creating, editing, and deleting email templates.',
+          'Changes must be published to GitHub to be visible to all users.'
         ]
       },
       privacy: {
@@ -673,6 +691,9 @@ export default function HelpCenter({ language = 'fr', onClose, supportEmail = 'e
                   {strings.sections?.shortcuts ? (
                     <a href="#shortcuts" className="font-semibold text-[#145a64] hover:underline px-2 py-1">{strings.sections.shortcuts.heading}</a>
                   ) : null}
+                  {strings.sections?.admin ? (
+                    <a href="#admin" className="font-semibold text-[#145a64] hover:underline px-2 py-1">{strings.sections.admin.heading}</a>
+                  ) : null}
                   {strings.sections?.privacy ? (
                     <a href="#privacy" className="font-semibold text-[#145a64] hover:underline px-2 py-1">{strings.sections.privacy.heading}</a>
                   ) : null}
@@ -845,6 +866,21 @@ export default function HelpCenter({ language = 'fr', onClose, supportEmail = 'e
                         ))}
                     </div>
                   </div>
+                </section>
+              ) : null}
+              {strings.sections?.admin ? (
+                <section id="admin">
+                  <SectionHeader icon={Settings} title={strings.sections.admin.heading} />
+                  <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                    {(strings.sections.admin.points || [])
+                      .filter((p) => !query || p.toLowerCase().includes(query.toLowerCase()))
+                      .map((p, i) => (
+                        <li key={i} className="flex gap-3">
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#1f8a99]" aria-hidden="true" />
+                          <span>{p}</span>
+                        </li>
+                      ))}
+                  </ul>
                 </section>
               ) : null}
               {strings.sections?.privacy ? (
