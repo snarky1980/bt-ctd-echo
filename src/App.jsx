@@ -4416,23 +4416,6 @@ ${cleanBodyHtml}
                           value={currentValue}
                           onChange={(e) => {
                             const newValue = e.target.value
-                            // Only update if value actually changed
-                            if (newValue !== currentValue) {
-                              const preferredLang = (templateLanguage || templateLanguageRef.current || 'fr').toUpperCase()
-                              setVariables(prev => {
-                                const assignments = expandVariableAssignment(varName, newValue, {
-                                  preferredLanguage: preferredLang,
-                                  variables: prev
-                                })
-                                return applyAssignments(prev, assignments)
-                              })
-                            }
-                            // Auto-resize (max 2 lines)
-                            const lines = (newValue.match(/\n/g) || []).length + 1
-                            e.target.style.height = lines <= 2 ? (lines === 1 ? '32px' : '52px') : '52px'
-                          }}
-                          onInput={(e) => {
-                            const newValue = e.target.value
                             const preferredLang = (templateLanguage || templateLanguageRef.current || 'fr').toUpperCase()
                             setVariables(prev => {
                               const assignments = expandVariableAssignment(varName, newValue, {
@@ -4441,6 +4424,9 @@ ${cleanBodyHtml}
                               })
                               return applyAssignments(prev, assignments)
                             })
+                            // Auto-resize (max 2 lines)
+                            const lines = (newValue.match(/\n/g) || []).length + 1
+                            e.target.style.height = lines <= 2 ? (lines === 1 ? '32px' : '52px') : '52px'
                           }}
                           onFocus={() => setFocusedVar(varName)}
                           onKeyDown={(e) => {
