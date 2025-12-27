@@ -1,27 +1,9 @@
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { varKeysMatch, resolveVariableValue } from '../utils/variables';
-import RichTextToolbar from './RichTextToolbar.jsx';
+import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { varKeysMatch, resolveVariableValue } from '../utils/variables'
+import { escapeHtml, BLOCK_ELEMENTS, convertPlainTextToHtml } from '../utils/html'
+import RichTextToolbar from './RichTextToolbar.jsx'
 
-const escapeHtml = (input = '') =>
-  String(input)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-
-const BLOCK_ELEMENTS = new Set([
-  'DIV', 'P', 'SECTION', 'ARTICLE', 'HEADER', 'FOOTER', 'ASIDE', 'NAV',
-  'UL', 'OL', 'LI', 'PRE', 'BLOCKQUOTE', 'TABLE', 'TBODY', 'THEAD', 
-  'TFOOT', 'TR', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HR'
-]);
-
-const convertPlainTextToHtml = (text = '') =>
-  escapeHtml(text)
-    .replace(/\r\n|\r/g, '\n')
-    .replace(/\n/g, '<br data-line-break="true">');
-
-const PILL_TEMPLATE_TOKEN = '__RT_PILL_VALUE__';
+const PILL_TEMPLATE_TOKEN = '__RT_PILL_VALUE__'
 
 const escapeSelector = (value = '') => {
   if (typeof window !== 'undefined' && window.CSS?.escape) {

@@ -102,6 +102,43 @@ Performed a comprehensive, non-destructive refactor of the ECHO Email Template A
 5. **Consistent Patterns:** Standardized coding patterns across the codebase
 6. **Professional Quality:** Code appears naturally written, not AI-generated
 
+---
+
+## Second Refactor: December 27, 2025
+
+### Code Deduplication
+
+**Created `src/utils/html.js`:**
+- Centralized HTML utilities: `escapeHtml`, `BLOCK_ELEMENTS`, `convertPlainTextToHtml`, `selectEntirePill`
+- Eliminates ~50 lines of duplicated code between `SimplePillEditor.jsx` and `RichTextPillEditor.jsx`
+
+**Cleaned `App.jsx`:**
+- Removed ~360 lines of duplicated functions now imported from `utils/template.js`:
+  - `resolveVariableInfo`, `guessSampleValue`
+  - `normalizeVariableEntry`, `normalizeVariableLibrary`, `mergeVariableLibraries`
+  - `mergeTemplateDatasets`, `CANONICAL_TEMPLATES`
+  - `buildInitialVariables`, `applyAssignments`
+  - `cleanupWhitespace`, `findTemplatePlaceholderForVar`
+  - `removeVariablePlaceholderFromText`, `ensurePlaceholderInText`
+- Removed outdated deploy markers and comments
+
+**Cleaned `VariablesPopout.jsx`:**
+- Removed ~35 lines of duplicated `resolveVariableInfo` and `guessSampleValue`
+- Now imports from centralized `utils/template.js`
+
+### Bundle Size Improvement
+- Before: 319.60 KB (gzip: 88.65 KB)
+- After: 318.26 KB (gzip: 88.40 KB)
+- **Reduction: ~1.34 KB**
+
+### Architecture Improvements
+- Single source of truth for template utilities in `utils/template.js`
+- Single source of truth for HTML utilities in `utils/html.js`
+- Cleaner import structure across components
+- Better maintainability: changes to utility functions propagate correctly
+
+---
+
 ## Repository Structure (After Refactor)
 
 ```
@@ -118,11 +155,17 @@ bt-ctd-echo/
 └── src/                # Source code
     ├── assets/         # Source assets
     ├── components/     # React components
+    │   ├── app/        # App-specific components
     │   └── ui/         # UI component library
-    ├── constants/      # Shared constants
+    ├── constants/      # Shared constants (styles, texts, synonyms)
+    ├── hooks/          # Custom React hooks
     ├── lexical/        # Lexical editor configuration
     ├── lib/            # Utility libraries
     └── utils/          # Utility functions
+        ├── html.js     # HTML utilities
+        ├── storage.js  # LocalStorage utilities
+        ├── template.js # Template processing utilities
+        └── variables.js # Variable processing utilities
 ```
 
 ## Technical Notes
@@ -139,6 +182,4 @@ No immediate action required. The refactor is complete and the application is re
 
 ---
 
-**Date:** December 15, 2025
-**Status:** ✅ Complete
-**Build Status:** ✅ Passing
+**Last Updated:** December 27, 2025

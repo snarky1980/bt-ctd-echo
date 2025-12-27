@@ -1,56 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState, useImperativeHandle } from 'react';
-import { varKeysMatch, resolveVariableValue } from '../utils/variables';
-
-const escapeHtml = (input = '') =>
-  String(input)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-
-const BLOCK_ELEMENTS = new Set([
-  'DIV',
-  'P',
-  'SECTION',
-  'ARTICLE',
-  'HEADER',
-  'FOOTER',
-  'ASIDE',
-  'NAV',
-  'UL',
-  'OL',
-  'LI',
-  'PRE',
-  'BLOCKQUOTE',
-  'TABLE',
-  'TBODY',
-  'THEAD',
-  'TFOOT',
-  'TR',
-  'H1',
-  'H2',
-  'H3',
-  'H4',
-  'H5',
-  'H6',
-  'HR'
-]);
-
-const convertPlainTextToHtml = (text = '') =>
-  escapeHtml(text)
-    .replace(/\r\n|\r/g, '\n')
-    .replace(/\n/g, '<br data-line-break="true">');
-
-const selectEntirePill = (pill) => {
-  if (!pill) return;
-  const selection = document.getSelection?.();
-  if (!selection) return;
-  const range = document.createRange();
-  range.selectNodeContents(pill);
-  selection.removeAllRanges();
-  selection.addRange(range);
-};
+import React, { useCallback, useEffect, useRef, useState, useImperativeHandle } from 'react'
+import { varKeysMatch, resolveVariableValue } from '../utils/variables'
+import { escapeHtml, BLOCK_ELEMENTS, convertPlainTextToHtml, selectEntirePill } from '../utils/html'
 
 const SimplePillEditor = React.forwardRef(({
   value,

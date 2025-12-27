@@ -95,7 +95,8 @@ const copyStaticFilesPlugin = {
 }
 
 export default defineConfig(({ mode }) => {
-  const base = '/echo/';
+  // Pour un sous-domaine dédié, base doit être '/'
+  const base = '/';
   
   return {
     base: mode === 'production' ? base : '/',

@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from '../ui/button'
 import SimplePillEditor from '../SimplePillEditor'
 import RichTextPillEditor from '../RichTextPillEditor'
-import { RotateCcw, Copy, Send } from 'lucide-react'
+import { RotateCcw, Copy } from 'lucide-react'
 
 export function EditorPanel({
   selectedTemplate,
@@ -14,7 +14,6 @@ export function EditorPanel({
   setFinalBody,
   handleResetClick,
   copyToClipboard,
-  composePlainTextEmailDraft,
   t,
 }) {
   if (!selectedTemplate) {
@@ -67,9 +66,6 @@ export function EditorPanel({
         </Button>
         <Button onClick={() => copyToClipboard('all')}>
           <Copy className="mr-2 h-4 w-4" /> {t.copyAll}
-        </Button>
-        <Button onClick={composePlainTextEmailDraft}>
-          <Send className="mr-2 h-4 w-4" /> {t.sendEmail}
         </Button>
       </div>
     </div>

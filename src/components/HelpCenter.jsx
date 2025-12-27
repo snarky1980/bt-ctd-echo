@@ -48,11 +48,10 @@ const translations = {
         ]
       },
       copying: {
-        heading: 'Copier & Envoyer',
+        heading: 'Copier & Partager',
         points: [
           'Les boutons Copier Objet / Copier Corps / Copier Tout incluent vos valeurs actuelles et le formatage riche (gras, surlignage, etc.).',
-          'Le bouton « Ouvrir dans un courriel » génère un lien mailto qui ouvre votre client de messagerie par défaut (Outlook, Gmail, etc.) et insère automatiquement l\'objet et le corps en texte brut.',
-          'Important : Le formatage riche est perdu avec le bouton mailto. Pour conserver le gras, les couleurs et le surlignage, utilisez « Copier Tout » puis collez dans votre client préféré.',
+          'Utilisez « Copier Tout » puis collez dans votre client de messagerie préféré pour conserver le gras, les couleurs et le surlignage.',
           'Le lien direct (icône de lien) inclut l\'identifiant et la langue dans l\'URL pour partager le modèle avec des collègues.',
           'Les actions Copilot copient automatiquement le prompt complet avec les valeurs des variables injectées pour une utilisation immédiate dans Copilot.'
         ]
@@ -71,7 +70,6 @@ const translations = {
           ['Ctrl/Cmd + Entrée', 'Copier tout'],
           ['Ctrl/Cmd + B', 'Copier le corps'],
           ['Ctrl/Cmd + J', 'Copier l\'objet'],
-          ['Ctrl/Cmd + Shift + Entrée', 'Ouvrir dans un courriel'],
           ['Ctrl/Cmd + /', 'Focus sur la recherche'],
           ['Ctrl/Cmd + R (Variables)', 'Réinitialiser aux exemples'],
           ['Ctrl/Cmd + Shift + V (Variables)', 'Collage intelligent var: valeur']
@@ -115,14 +113,6 @@ const translations = {
             'Fermez puis rouvrez le popup pour déclencher une synchronisation complète.',
             'Vérifiez que vous n\'êtes pas sur un onglet inactif qui bloquerait les BroadcastChannels (certains navigateurs limitent la communication).',
             'Rechargez la page avec ⇧ + ⌘ + R (Mac) ou ⇧ + Ctrl + R (Windows) pour repartir d\'un état propre.'
-          ]
-        },
-        {
-          title: 'Le bouton “Ouvrir dans un courriel” ne fait rien',
-          steps: [
-            'Confirmez qu\'un modèle est sélectionné. Le bouton s\'active uniquement quand un contenu final est disponible.',
-            'Certaines organisations bloquent les liens `mailto:`. Dans ce cas, utilisez « Copier Tout » puis collez manuellement dans votre client de messagerie.',
-            'Si rien ne se produit, vérifiez que vous avez un client de messagerie par défaut configuré dans Windows (Paramètres > Applications > Applications par défaut > E-mail).'
           ]
         }
       ]
@@ -232,11 +222,10 @@ const translations = {
         ]
       },
       copying: {
-        heading: 'Copying & Sending',
+        heading: 'Copying & Sharing',
         points: [
           'Copy Subject / Copy Body / Copy All buttons include your current values and preserve rich formatting (bold, highlights, etc.).',
-          'The "Open in an email" button generates a mailto link that opens your default email client (Outlook, Gmail, etc.) and pre-fills the subject and body with plain text.',
-          'Important: Rich formatting is lost when using the mailto button. To preserve bold, colors, and highlights, use "Copy All" and paste into your preferred client.',
+          'Use "Copy All" and paste into your preferred email client to preserve bold, colors, and highlights.',
           'The direct-link icon includes id & language in the URL to share the template with colleagues.',
           'Copilot actions automatically copy the complete prompt with injected variable values for immediate use in Copilot.'
         ]
@@ -255,7 +244,6 @@ const translations = {
           ['Ctrl/Cmd + Enter', 'Copy all'],
           ['Ctrl/Cmd + B', 'Copy body'],
           ['Ctrl/Cmd + J', 'Copy subject'],
-          ['Ctrl/Cmd + Shift + Enter', 'Open in an email'],
           ['Ctrl/Cmd + /', 'Focus search'],
           ['Ctrl/Cmd + R (Variables)', 'Reset to examples'],
           ['Ctrl/Cmd + Shift + V (Variables)', 'Smart paste var: value']
@@ -299,14 +287,6 @@ const translations = {
             'Close and reopen the popout to force a full refresh.',
             'Make sure the tab stays active—some browsers pause BroadcastChannels in background tabs.',
             'Hard reload with ⇧ + ⌘ + R (Mac) or ⇧ + Ctrl + R (Windows) to clear cached state.'
-          ]
-        },
-        {
-          title: '"Open in an email" button does nothing',
-          steps: [
-            'Confirm that a template is selected. The button is enabled only when final content is available.',
-            'Some organizations block `mailto:` links. If that\'s the case, use "Copy All" and paste into your email client manually.',
-            'If nothing happens, check that you have a default email client configured in Windows (Settings > Apps > Default apps > Email).'
           ]
         }
       ]

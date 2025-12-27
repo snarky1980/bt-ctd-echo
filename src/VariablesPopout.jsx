@@ -7,47 +7,7 @@ import {
   resolveVariableValue,
   varKeysMatch
 } from './utils/variables'
-
-
-
-const resolveVariableInfo = (templatesData, name = '') => {
-  if (!templatesData?.variables || !name) return null
-  if (templatesData.variables[name]) return templatesData.variables[name]
-  const baseName = name.replace(/_(FR|EN)$/i, '')
-  return templatesData.variables[baseName] || null
-}
-
-const guessSampleValue = (templatesData, name = '') => {
-  const info = resolveVariableInfo(templatesData, name)
-  // Prefer per-language examples when available based on suffix
-  const suffix = (name || '').match(/_(FR|EN)$/i)?.[1]?.toLowerCase()
-  if (suffix === 'en' && info?.examples?.en) return info.examples.en
-  if (suffix === 'fr' && info?.examples?.fr) return info.examples.fr
-  // Support object example { fr, en }
-  if (info?.example && typeof info.example === 'object') {
-    if (suffix === 'en') return info.example.en ?? info.example.fr ?? ''
-    if (suffix === 'fr') return info.example.fr ?? info.example.en ?? ''
-    return info.example.fr ?? info.example.en ?? ''
-  }
-  if (info?.example) return info.example
-  const normalized = (name || '').toLowerCase()
-  const format = info?.format || (
-    /date|jour|day/.test(normalized) ? 'date' :
-    /heure|time/.test(normalized) ? 'time' :
-    /montant|total|nombre|count|amount|num|quant/.test(normalized) ? 'number' :
-    'text'
-  )
-  switch (format) {
-    case 'date':
-      return new Date().toISOString().slice(0, 10)
-    case 'time':
-      return '09:00'
-    case 'number':
-      return '0'
-    default:
-      return '…'
-  }
-}
+import { resolveVariableInfo, guessSampleValue } from './utils/template'
 
 /**
  * Standalone Variables Editor Popout Window

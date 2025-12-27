@@ -1,6 +1,4 @@
 /* eslint-disable no-console, no-prototype-builtins, no-unreachable, no-undef, no-empty */
-/* DEPLOY: 2025-10-15 07:40 - FIXED: Function hoisting error resolved */
-/* REFACTORED: 2025-12-16 - Extracted constants to separate modules */
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import {
   expandVariableAssignment,
@@ -8,21 +6,30 @@ import {
   normalizeVarKey,
   resolveVariableValue
 } from './utils/variables'
-import canonicalTemplatesRaw from '../complete_email_templates.json'
+import {
+  CANONICAL_TEMPLATES,
+  mergeTemplateDatasets,
+  buildInitialVariables,
+  resolveVariableInfo,
+  guessSampleValue,
+  applyAssignments,
+  cleanupWhitespace,
+  findTemplatePlaceholderForVar,
+  removeVariablePlaceholderFromText,
+  ensurePlaceholderInText
+} from './utils/template.js'
 import { createPortal } from 'react-dom'
 import Fuse from 'fuse.js'
 import { loadState, saveState, getDefaultState, clearState } from './utils/storage.js'
-// Import extracted constants
 import { NAVY_TEXT, CATEGORY_BADGE_STYLES, getCategoryBadgeStyle, customEditorStyles } from './constants/styles.js'
 import { SYNONYMS, normalize, expandQuery } from './constants/synonyms.js'
 import { interfaceTexts } from './constants/interfaceTexts.js'
-// Deploy marker: 2025-10-16T07:31Z
 import { Search, FileText, Copy, RotateCcw, Languages, Filter, Globe, Sparkles, Mail, Edit3, Link, Settings, X, Move, Send, Star, ClipboardPaste, Eraser, Pin, PinOff, Minimize2, ExternalLink, Expand, Shrink, MoveRight, LifeBuoy } from 'lucide-react'
 import echoLogo from './assets/echo-logo.svg'
 import { Button } from './components/ui/button.jsx'
 import { Input } from './components/ui/input.jsx'
-import SimplePillEditor from './components/SimplePillEditor.jsx';
-import RichTextPillEditor from './components/RichTextPillEditor.jsx';
+import SimplePillEditor from './components/SimplePillEditor.jsx'
+import RichTextPillEditor from './components/RichTextPillEditor.jsx'
 import AISidebar from './components/AISidebar';
 import HelpCenter from './components/HelpCenter.jsx'
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card.jsx'
@@ -262,366 +269,8 @@ const extractVariableWithAnchors = (text = '', templateText = '', varName = '') 
   return extracted
 }
 
-const resolveVariableInfo = (templatesData, name = '') => {
-  if (!templatesData?.variables || !name) return null
-  if (templatesData.variables[name]) return templatesData.variables[name]
-  const base = name.replace(/_(FR|EN)$/i, '')
-  return templatesData.variables[base] || null
-}
-
-const guessSampleValue = (templatesData, name = '') => {
-  const info = resolveVariableInfo(templatesData, name)
-  const suffixMatch = (name || '').match(/_(FR|EN)$/i)
-  const suffix = suffixMatch ? suffixMatch[1].toUpperCase() : null
-
-  // Prefer per-language examples when available.
-  // Support legacy string example and new object shape { fr, en }.
-  const rawExample = (() => {
-    const exObj = info?.example && typeof info.example === 'object' && (info.example.fr || info.example.en) ? info.example : null
-    const getFromExampleObject = (lang) => {
-      if (!exObj) return null
-      if (lang === 'EN') return exObj.en ?? exObj.fr ?? ''
-      if (lang === 'FR') return exObj.fr ?? exObj.en ?? ''
-      return exObj.fr ?? exObj.en ?? ''
-    }
-    if (suffix === 'EN') return info?.examples?.en ?? getFromExampleObject('EN') ?? (typeof info?.example === 'string' ? info.example : '') ?? ''
-    if (suffix === 'FR') return info?.examples?.fr ?? getFromExampleObject('FR') ?? (typeof info?.example === 'string' ? info.example : '') ?? ''
-    // Base (no suffix): prefer FR then EN
-    return (info?.examples?.fr
-      ?? info?.examples?.en
-      ?? getFromExampleObject('FR')
-      ?? (typeof info?.example === 'string' ? info.example : '')
-      ?? '')
-  })()
-  const normalized = (name || '').toLowerCase()
-
-  // Heuristic: determine intended kind
-  const kind = (() => {
-    if (info?.format) return info.format
-    if (/date|jour|day/.test(normalized)) return 'date'
-    if (/heure|time/.test(normalized)) return 'time'
-    if (/(montant|total|amount|price|cost|refund|credit|deposit|payment)/.test(normalized)) return 'currency'
-    if (/(nombre|count|num|quant)/.test(normalized)) return 'number'
-    return 'text'
-  })()
-
-  // Map common FR placeholder to EN
-  const mapFrPlaceholderToEn = (s = '') => {
-    const trimmed = String(s).trim()
-    if (!trimmed) return ''
-    if (/^valeur\s+à\s+d[ée]finir$/i.test(trimmed)) return 'To be defined'
-    return trimmed
-  }
-
-  // Build EN-friendly example if needed
-  const toEnSample = (example, k) => {
-    const val = String(example || '').trim()
-    if (!val) {
-      // Fallbacks by kind
-      if (k === 'date') return '2025-07-15'
-      if (k === 'time') return '09:00'
-      if (k === 'currency') return '$1,250.00'
-      if (k === 'number') return '0'
-      return 'Example'
-    }
-    // URLs and emails are language-agnostic
-    if (/^https?:\/\//i.test(val) || /@/.test(val)) return val
-    // Common FR placeholder phrase
-    const mapped = mapFrPlaceholderToEn(val)
-    if (mapped !== val) return mapped
-    if (k === 'currency') {
-      // Convert FR-styled currency like "3 425,50 $" -> "$3,425.50"
-      const m = val.match(/([0-9][0-9\s\u00A0.,]*)\s*\$/)
-      if (m) {
-        const digits = m[1]
-          .replace(/\u00A0|\s/g, '') // remove thin/normal spaces
-          .replace(/\.(?=\d{3})/g, '') // remove thousand dots if any
-          .replace(/,(\d{2})$/, '.$1') // decimal comma -> dot
-        // Insert commas for thousands
-        const parts = digits.split('.')
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return `$${parts.join('.')}`
-      }
-      // If it already looks EN-ish
-      if (/^\$?\d{1,3}(,\d{3})*(\.\d{2})?$/.test(val)) return val.startsWith('$') ? val : `$${val}`
-      return '$1,250.00'
-    }
-    if (k === 'date') {
-      return val
-    }
-    if (k === 'time') return '09:00'
-    return val
-  }
-
-  // Build FR-friendly example fallback
-  const toFrSample = (example, k) => {
-    const val = String(example || '').trim()
-    if (!val) {
-      if (k === 'date') return new Date().toISOString().slice(0, 10)
-      if (k === 'time') return '09:00'
-      if (k === 'currency') return '2 890,00 $'
-      if (k === 'number') return '0'
-      return '…'
-    }
-    return val
-  }
-
-  if (suffix === 'EN') {
-    return toEnSample(rawExample, kind)
-  }
-  if (suffix === 'FR') {
-    return toFrSample(rawExample, kind)
-  }
-
-  // Base (no suffix): keep as dataset provides or generic by kind
-  if (rawExample) return rawExample
-  switch (kind) {
-    case 'date':
-      return new Date().toISOString().slice(0, 10)
-    case 'time':
-      return '09:00'
-    case 'currency':
-      return '2 890,00 $'
-    case 'number':
-      return '0'
-    default:
-      return '…'
-  }
-}
-
-const hasText = (value) => typeof value === 'string' && value.trim().length > 0
-
-const normalizeVariableEntry = (entry = {}) => {
-  const textValue = (value) => (typeof value === 'string' ? value : '')
-  const normalized = { ...entry }
-  const desc = entry?.description || {}
-  normalized.description = {
-    fr: textValue(desc.fr),
-    en: textValue(desc.en)
-  }
-  const example = entry?.example
-  if (example && typeof example === 'object') {
-    normalized.example = {
-      fr: textValue(example.fr),
-      en: textValue(example.en)
-    }
-  } else if (typeof example === 'string') {
-    normalized.example = { fr: example, en: example }
-  } else {
-    normalized.example = { fr: '', en: '' }
-  }
-  normalized.format = entry?.format || 'text'
-  if (entry?.examples) {
-    normalized.examples = entry.examples
-  }
-  return normalized
-}
-
-const normalizeVariableLibrary = (library = {}) => {
-  const normalized = {}
-  Object.entries(library || {}).forEach(([key, value]) => {
-    normalized[key] = normalizeVariableEntry(value || {})
-  })
-  return normalized
-}
-
-const mergeVariableLibraries = (primaryVars = {}, fallbackVars = {}) => {
-  const merged = {}
-  const keys = new Set([
-    ...Object.keys(fallbackVars || {}),
-    ...Object.keys(primaryVars || {})
-  ])
-  keys.forEach((key) => {
-    const primaryEntry = primaryVars[key]
-    const fallbackEntry = fallbackVars[key]
-    if (!primaryEntry && !fallbackEntry) return
-    const combined = {
-      format: primaryEntry?.format || fallbackEntry?.format || 'text',
-      description: {
-        fr: hasText(primaryEntry?.description?.fr)
-          ? primaryEntry.description.fr
-          : (fallbackEntry?.description?.fr || ''),
-        en: hasText(primaryEntry?.description?.en)
-          ? primaryEntry.description.en
-          : (fallbackEntry?.description?.en || '')
-      },
-      example: {
-        fr: hasText(primaryEntry?.example?.fr)
-          ? primaryEntry.example.fr
-          : (fallbackEntry?.example?.fr || ''),
-        en: hasText(primaryEntry?.example?.en)
-          ? primaryEntry.example.en
-          : (fallbackEntry?.example?.en || '')
-      }
-    }
-    const examples = primaryEntry?.examples || fallbackEntry?.examples
-    if (examples) combined.examples = examples
-    merged[key] = combined
-  })
-  return merged
-}
-
-const mergeTemplateDatasets = (primary = {}, fallback = null) => {
-  const normalizedPrimaryVars = normalizeVariableLibrary(primary?.variables || {})
-  if (!fallback) {
-    return {
-      ...primary,
-      variables: normalizedPrimaryVars
-    }
-  }
-  const normalizedFallbackVars = normalizeVariableLibrary(fallback?.variables || {})
-  const merged = {
-    ...(fallback || {}),
-    ...(primary || {})
-  }
-  merged.metadata = {
-    ...(fallback?.metadata || {}),
-    ...(primary?.metadata || {})
-  }
-  merged.templates = (Array.isArray(primary?.templates) && primary.templates.length)
-    ? primary.templates
-    : (fallback?.templates || [])
-  merged.variables = mergeVariableLibraries(normalizedPrimaryVars, normalizedFallbackVars)
-  return merged
-}
-
-const CANONICAL_TEMPLATES = mergeTemplateDatasets(canonicalTemplatesRaw, null)
-
-const buildInitialVariables = (template, templatesData, langOverride) => {
-  const seed = {}
-  if (!template?.variables || !Array.isArray(template.variables)) return seed
-  template.variables.forEach((baseName) => {
-    const variants = new Set([baseName])
-    LANGUAGE_SUFFIXES.forEach((suffix) => variants.add(`${baseName}_${suffix}`))
-    variants.forEach((key) => {
-      // For base (unsuffixed) variable prefer templateLanguage-specific default
-      if (key === baseName) {
-        const info = resolveVariableInfo(templatesData, baseName)
-        if (info) {
-          const lang = (langOverride || 'fr').toLowerCase()
-          // Support object example { fr, en }
-          if (info.example && typeof info.example === 'object') {
-            seed[key] = info.example[lang] ?? info.example.fr ?? info.example.en ?? ''
-            return
-          }
-          // Support examples map
-          if (info.examples && info.examples[lang]) {
-            seed[key] = info.examples[lang]
-            return
-          }
-        }
-      }
-      seed[key] = guessSampleValue(templatesData, key)
-    })
-  })
-  return seed
-}
-
-const applyAssignments = (prev = {}, assignments = {}) => {
-  const keys = Object.keys(assignments || {})
-  if (!keys.length) return prev
-  let hasDiff = false
-  const next = { ...prev }
-  keys.forEach((key) => {
-    const normalized = (assignments[key] ?? '').toString()
-    if ((next[key] ?? '') !== normalized) {
-      next[key] = normalized
-      hasDiff = true
-    }
-  })
-  return hasDiff ? next : prev
-}
-
+// Local utility for regex escaping (not in shared module)
 const escapeRegExp = (value = '') => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-const cleanupWhitespace = (text = '') => text
-  .replace(/[ \t]{2,}/g, ' ')
-  .replace(/\s+([,.;:!?])/g, '$1')
-  .replace(/[ \t]+\n/g, '\n')
-  .replace(/\n[ \t]+/g, '\n')
-  .replace(/\n{3,}/g, '\n\n')
-
-const findTemplatePlaceholderForVar = (templateText = '', varName = '') => {
-  if (!templateText || !varName) return null
-  const normalizedTarget = normalizeVarKey(varName)
-  if (!normalizedTarget) return null
-  const regex = /<<([^>]+)>>/g
-  let match
-  while ((match = regex.exec(templateText)) !== null) {
-    if (normalizeVarKey(match[1]) === normalizedTarget) {
-      return match[0]
-    }
-  }
-  return null
-}
-
-const removeVariablePlaceholderFromText = (text = '', varName = '') => {
-  if (!text || !varName) return text
-  const normalizedTarget = normalizeVarKey(varName)
-  if (!normalizedTarget) return text
-
-  const pattern = /(\s*)<<([^>]+)>>(\s*)/g
-  const updated = text.replace(pattern, (fullMatch, leading = '', innerName = '', trailing = '') => {
-    if (normalizeVarKey(innerName) !== normalizedTarget) return fullMatch
-
-    const hasLeadingNewline = /\n/.test(leading)
-    const hasTrailingNewline = /\n/.test(trailing)
-    if (hasLeadingNewline && hasTrailingNewline) return '\n\n'
-    if (hasLeadingNewline || hasTrailingNewline) return '\n'
-    return ' '
-  })
-
-  return cleanupWhitespace(updated)
-}
-
-const ensurePlaceholderInText = (text = '', templateText = '', varName = '') => {
-  if (!templateText || !varName) return text || ''
-  const placeholder = findTemplatePlaceholderForVar(templateText, varName) || `<<${varName}>>`
-  const source = text || ''
-  if (source.includes(placeholder)) return source
-
-  const varIndex = templateText.indexOf(placeholder)
-  if (varIndex === -1) return source
-
-  const beforeSegments = templateText.substring(0, varIndex).split(/<<[^>]+>>/)
-  const beforeAnchor = beforeSegments[beforeSegments.length - 1] || ''
-  const afterSegments = templateText.substring(varIndex + placeholder.length).split(/<<[^>]+>>/)
-  const afterAnchor = afterSegments[0] || ''
-
-  let insertPos = source.length
-
-  if (afterAnchor) {
-    const afterIdx = source.indexOf(afterAnchor)
-    if (afterIdx !== -1) {
-      insertPos = afterIdx
-    }
-  }
-
-  if (insertPos === source.length && beforeAnchor) {
-    const beforeIdx = source.lastIndexOf(beforeAnchor)
-    if (beforeIdx !== -1) {
-      insertPos = beforeIdx + beforeAnchor.length
-    }
-  }
-
-  let working = source
-  if (insertPos === working.length && !beforeAnchor && !afterAnchor && working.length > 0 && !/\n$/.test(working)) {
-    working += '\n'
-    insertPos = working.length
-  }
-
-  const charBefore = insertPos > 0 ? working[insertPos - 1] : ''
-  const charAfter = insertPos < working.length ? working[insertPos] : ''
-  const needsSpaceBefore = charBefore && !/[\s([\n]/.test(charBefore)
-  const needsSpaceAfter = charAfter && !/[\s,.;:!?)/\]]/.test(charAfter)
-
-  let insertion = placeholder
-  if (needsSpaceBefore) insertion = ` ${insertion}`
-  if (needsSpaceAfter) insertion = `${insertion} `
-
-  const updated = working.slice(0, insertPos) + insertion + working.slice(insertPos)
-  return cleanupWhitespace(updated)
-}
 
 function App() {
   // Toast notifications
@@ -1978,14 +1627,6 @@ function App() {
         }
       }
       
-      // Ctrl/Cmd + Shift + Enter: Open plain-text compose draft
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Enter') {
-        e.preventDefault()
-        if (selectedTemplate) {
-          composePlainTextEmailDraft()
-        }
-      }
-  // (Removed stray conditional referencing undefined variables from earlier experimental code)
       // Ctrl/Cmd + /: Focus on search (search shortcut)
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
         e.preventDefault()
@@ -3380,173 +3021,6 @@ ${cleanBodyHtml}
     setShowResetWarning(false)
   }
 
-  // Compose helper: plain-text mailto fallback
-  const composePlainTextEmailDraft = useCallback(() => {
-    console.log('📧 composePlainTextEmailDraft called')
-
-    const latestVariables = variablesRef.current || variables || {}
-    const subjectSource = finalSubjectRef.current ?? finalSubject
-    const bodySource = finalBodyRef.current ?? finalBody
-    const resolvedSubject = replaceVariablesWithValues(subjectSource, latestVariables) || ''
-    const bodyHtmlSource = bodyEditorRef.current?.getHtml?.() ?? bodySource
-    const resolvedBodyText = replaceVariablesWithValues(bodySource, latestVariables) || ''
-    const bodyResult = replaceVariablesInHTML(bodyHtmlSource, latestVariables, resolvedBodyText)
-
-    const plainBody = (bodyResult.text || resolvedBodyText || '').replace(/\r?\n/g, '\r\n')
-
-    const subjectParam = encodeURIComponent(resolvedSubject)
-    const bodyParam = encodeURIComponent(plainBody)
-    const MAX_MAILTO_LENGTH = 1800
-
-    let mailtoBodyParam = bodyParam
-    let mailtoUrl = `mailto:?subject=${subjectParam}&body=${mailtoBodyParam}`
-    const originalMailtoLength = mailtoUrl.length
-    let clipboardNotice = null
-
-    if (originalMailtoLength > MAX_MAILTO_LENGTH) {
-      clipboardNotice = interfaceLanguage === 'fr'
-        ? 'Le corps complet a été copié dans le presse-papiers. Ouvrez Outlook puis faites simplement Coller.'
-        : 'The full email body was copied to your clipboard. Open Outlook and just paste it in.'
-
-      const legacyCopyToClipboard = () => {
-        let tempTextArea
-        try {
-          tempTextArea = document.createElement('textarea')
-          tempTextArea.value = plainBody
-          tempTextArea.style.position = 'fixed'
-          tempTextArea.style.opacity = '0'
-          document.body.appendChild(tempTextArea)
-          tempTextArea.focus({ preventScroll: true })
-          tempTextArea.select()
-          const success = document.execCommand('copy')
-          console.log('📧 Copied plain body via execCommand', success)
-          if (!success) {
-            const warnMsg = interfaceLanguage === 'fr'
-              ? "Impossible de copier automatiquement le texte. Utilisez le brouillon .eml si nécessaire."
-              : 'Could not copy the text automatically. Use the .eml draft if needed.'
-            toast.error(warnMsg, 6000)
-          }
-        } catch (error) {
-          console.warn('📧 execCommand copy failed:', error)
-        } finally {
-          if (tempTextArea && tempTextArea.parentNode) {
-            tempTextArea.parentNode.removeChild(tempTextArea)
-          }
-        }
-      }
-
-      if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(plainBody)
-          .then(() => console.log('📧 Copied plain body via navigator.clipboard'))
-          .catch(err => {
-            console.warn('📧 navigator.clipboard copy failed:', err)
-            legacyCopyToClipboard()
-          })
-      } else {
-        legacyCopyToClipboard()
-      }
-
-      const shortBodyMessage = interfaceLanguage === 'fr'
-        ? 'Le texte complet est copié dans votre presse-papiers. Collez-le dans Outlook.'
-        : 'The full text is copied to your clipboard. Paste it in Outlook.'
-      mailtoBodyParam = encodeURIComponent(shortBodyMessage)
-      mailtoUrl = `mailto:?subject=${subjectParam}&body=${mailtoBodyParam}`
-
-      console.log('📧 mailto length exceeded limit, using clipboard assist. Original length:', originalMailtoLength)
-
-      if (clipboardNotice) {
-        toast.info(clipboardNotice, 5000)
-      }
-    }
-
-    const downloadEmlFallback = (reason) => {
-      console.log('📧 Fallback .eml download:', reason)
-      const emlContent = `Subject: ${resolvedSubject}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n${plainBody}`
-      const blob = new Blob([emlContent], { type: 'message/rfc822' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `email-draft-${Date.now()}.eml`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-      const msg = interfaceLanguage === 'fr'
-        ? 'Aucun client courriel détecté. Brouillon .eml téléchargé.'
-        : 'No email client detected. Downloaded a .eml draft instead.'
-      toast.info(msg)
-    }
-
-    const tryMailLaunch = () => {
-      // Special handling for Windows legacy Outlook / Edge
-      if (typeof navigator !== 'undefined' && typeof navigator.msLaunchUri === 'function') {
-        navigator.msLaunchUri(mailtoUrl, () => console.log('📧 msLaunchUri success'), (err) => {
-          console.warn('📧 msLaunchUri failed:', err)
-          downloadEmlFallback('msLaunchUri fail')
-        })
-        return true
-      }
-
-      // Try anchor click first — historically the most reliable in Chrome/Edge for mailto
-      const launchers = [
-        () => {
-          const a = document.createElement('a')
-          a.href = mailtoUrl
-          a.style.display = 'none'
-          document.body.appendChild(a)
-          console.log('📧 anchor click attempt, href length:', a.href.length)
-          a.click()
-          document.body.removeChild(a)
-        },
-        () => { window.location.assign(mailtoUrl); },
-        () => { window.location.href = mailtoUrl; },
-        () => { window.open(mailtoUrl, '_self'); },
-        () => { window.open(mailtoUrl, '_blank', 'noopener,noreferrer'); }
-      ]
-
-      for (const [idx, launch] of launchers.entries()) {
-        try {
-          launch()
-          console.log('📧 mailto launch attempt succeeded (index):', idx)
-          return true
-        } catch (error) {
-          console.warn('📧 mailto launch attempt failed:', error)
-        }
-      }
-      return false
-    }
-
-    console.log('📧 mailtoUrl:', mailtoUrl)
-    console.log('📧 mailto length check: original', originalMailtoLength, 'final', mailtoUrl.length)
-    const launched = tryMailLaunch()
-
-    if (!launched) {
-      downloadEmlFallback('all launch attempts failed')
-      return
-    }
-
-    if (!clipboardNotice) {
-      const msg = interfaceLanguage === 'fr'
-        ? 'Ouverture de votre client courriel...'
-        : 'Opening your email client...'
-      toast.info(msg, 2500)
-    }
-
-    setTimeout(() => {
-      if (!document.hidden && document.hasFocus()) {
-        const confirmMsg = interfaceLanguage === 'fr'
-          ? "Outlook ne semble pas s'ouvrir. Voulez-vous télécharger un brouillon .eml à la place?"
-          : 'Outlook did not appear to open. Would you like to download an .eml draft instead?'
-        if (window.confirm(confirmMsg)) {
-          console.log('📧 user confirmed fallback; downloading .eml')
-          downloadEmlFallback('user requested fallback after failed launch perception')
-        } else {
-          console.log('📧 user chose not to download fallback; leaving as-is')
-        }
-      }
-    }, 1800)
-  }, [interfaceLanguage, toast, variables, finalSubject, finalBody, replaceVariablesWithValues, replaceVariablesInHTML])
-
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom right, #f8fafc, #fefbe8, #e0f2fe)' }}>
       {debug && (
@@ -4399,22 +3873,6 @@ ${cleanBodyHtml}
                     >
                       <Copy className="h-5 w-5 mr-2" />
                       {copySuccess === 'all' ? t.copied : (t.copyAll || 'All')}
-                    </Button>
-
-                    {/* Compose button (plain-text mailto) */}
-                    <Button 
-                      onClick={() => composePlainTextEmailDraft()}
-                      className="font-bold transition-all duration-200 shadow-soft text-white btn-pill flex items-center py-3"
-                      style={{ background: '#2c3d50', borderRadius: '12px' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
-                      title={interfaceLanguage === 'fr' ? 'Ouvrir un brouillon en texte brut dans votre client de courriel' : 'Open a plain-text draft in your email client'}
-                    >
-                      <Send className="h-5 w-5 mr-2" />
-                      <div className="flex flex-col items-center">
-                        <span>{interfaceLanguage === 'fr' ? 'Ouvrir dans un courriel' : 'Open in an email'}</span>
-                        <span className="text-xs font-normal opacity-80">{interfaceLanguage === 'fr' ? '(texte brut)' : '(plain text)'}</span>
-                      </div>
                     </Button>
                   </div>
                   </div>
