@@ -75,6 +75,24 @@
       .cat-color{width:60px;height:36px;border:1px solid var(--border);border-radius:6px;cursor:pointer}
       .notice{display:none;position:fixed;top:10px;right:10px;background:#111827;color:#fff;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);font-weight:700;z-index:1000}
   .hidden{display:none!important}
+  /* Save indicator */
+  .save-indicator{position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:600;z-index:999;display:flex;align-items:center;gap:8px;transition:all 0.3s ease;opacity:0;transform:translateY(10px)}
+  .save-indicator.visible{opacity:1;transform:translateY(0)}
+  .save-indicator.saving{background:#fef3c7;border:1px solid #fde68a;color:#92400e}
+  .save-indicator.saved{background:#dcfce7;border:1px solid #bbf7d0;color:#166534}
+  .save-indicator .dot{width:8px;height:8px;border-radius:50%;animation:pulse 1s infinite}
+  .save-indicator.saving .dot{background:#f59e0b}
+  .save-indicator.saved .dot{background:#22c55e}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+  /* Delete confirmation modal */
+  #modal-delete{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1002;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+  .delete-modal-panel{background:#fff;border-radius:16px;padding:24px;width:min(420px,90vw);text-align:center;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+  .delete-modal-icon{font-size:48px;margin-bottom:16px}
+  .delete-modal-title{font-size:20px;font-weight:700;color:#0f172a;margin:0 0 8px}
+  .delete-modal-desc{font-size:14px;color:#64748b;margin:0 0 8px}
+  .delete-modal-name{font-size:15px;font-weight:600;color:#0f172a;background:#f1f5f9;padding:8px 12px;border-radius:8px;margin:12px 0 20px;display:inline-block}
+  .delete-modal-actions{display:flex;gap:12px;justify-content:center}
+  .delete-modal-actions .btn{padding:12px 24px;font-size:14px}
   /* Highlight assist */
   .ea-highlight-pulse{outline:3px solid #0ea5e9!important;animation:eaPulse 1.2s linear infinite;border-radius:8px}
   @keyframes eaPulse{0%,100%{outline-color:#0ea5e9}50%{outline-color:#fbbf24}}
@@ -127,8 +145,105 @@
         margin-bottom: 0;
       }
     </style>
+      /* Login screen */
+      #login-screen {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 50%, #f0fdf4 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      .login-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 40px;
+        width: min(420px, 90vw);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+      }
+      .login-box h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        color: #0f172a;
+      }
+      .login-box .subtitle {
+        margin: 0 0 32px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .login-box .field {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+      .login-box input[type="password"] {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 16px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        transition: border-color 0.2s;
+      }
+      .login-box input[type="password"]:focus {
+        outline: none;
+        border-color: var(--teal);
+      }
+      .login-box .error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 8px;
+        display: none;
+      }
+      .login-box .btn-login {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 700;
+        background: var(--teal);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+      }
+      .login-box .btn-login:hover {
+        background: #047857;
+      }
+      .login-box .btn-login:active {
+        transform: scale(0.98);
+      }
+      .login-box .lock-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+      #admin-content {
+        display: none;
+      }
+      #admin-content.authenticated {
+        display: block;
+      }
+  </style>
   </head>
   <body>
+    <!-- Login Screen -->
+    <div id="login-screen">
+      <div class="login-box">
+        <div class="lock-icon">🔐</div>
+        <h1>Console Admin</h1>
+        <p class="subtitle">Accès réservé aux administrateurs</p>
+        <div class="field">
+          <label for="admin-password">Mot de passe</label>
+          <input type="password" id="admin-password" placeholder="Entrez le mot de passe" autocomplete="current-password" />
+          <p class="error" id="login-error">Mot de passe incorrect</p>
+        </div>
+        <button class="btn-login" id="btn-login">Se connecter</button>
+      </div>
+    </div>
+
+    <!-- Admin Content (hidden until authenticated) -->
+    <div id="admin-content">
     <div class="topbar">
       <div class="brand">Admin (simple) <span id="updated-badge" title="Dernière mise à jour distante du JSON">–</span>
       </div>
@@ -295,8 +410,11 @@
           </section>
 
           <section style="margin-bottom:24px">
-            <h3 style="color:#0f172a;font-size:16px;font-weight:700;margin:0 0 12px">🔐 Sécurité et stockage</h3>
+            <h3 style="color:#0f172a;font-size:16px;font-weight:700;margin:0 0 12px">🔐 Sécurité et accès</h3>
             <ul style="margin:0;padding-left:20px;color:#334155;line-height:1.7">
+              <li><strong>Authentification requise</strong> : mot de passe demandé à chaque session (hash SHA-256)</li>
+              <li><strong>Session temporaire</strong> : l'authentification expire à la fermeture du navigateur (sessionStorage)</li>
+              <li><strong>Accès depuis l'app principale</strong> : bouton Admin discret en bas à gauche (visible pour tous, protégé par mot de passe)</li>
               <li><strong>Brouillon local</strong> : toutes les modifications sont sauvegardées dans le navigateur (localStorage)</li>
               <li><strong>Pas de synchronisation automatique</strong> : les changements ne sont visibles publiquement qu'après publication GitHub</li>
               <li><strong>Token GitHub</strong> : 
@@ -306,7 +424,7 @@
                   <li>Configuré automatiquement au premier clic sur "Publier sur GitHub"</li>
                 </ul>
               </li>
-              <li><strong>Accès restreint</strong> : cette console est protégée par <code>noindex, nofollow</code> et non liée depuis l'app web</li>
+              <li><strong>Indicateur de sauvegarde</strong> : badge visuel en bas à droite confirme chaque enregistrement local</li>
             </ul>
           </section>
 
@@ -319,6 +437,7 @@
               <li><strong>Nommer clairement les variables</strong> pour que les utilisateurs comprennent leur fonction</li>
               <li><strong>Exporter en Excel</strong> avant modifications majeures comme backup de sécurité</li>
               <li><strong>Éviter de recharger depuis GitHub</strong> si vous avez des modifications non publiées</li>
+              <li><strong>Confirmer avant suppression</strong> : un modal demande confirmation avec le nom du modèle – action irréversible</li>
             </ul>
           </section>
 
@@ -365,6 +484,26 @@
           <button class="btn primary" onclick="document.getElementById('modal-help').style.display='none'">Fermer</button>
         </div>
       </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="modal-delete">
+      <div class="delete-modal-panel">
+        <div class="delete-modal-icon">🗑️</div>
+        <div class="delete-modal-title">Supprimer ce modèle ?</div>
+        <div class="delete-modal-desc">Cette action est irréversible. Le modèle sera définitivement supprimé.</div>
+        <div class="delete-modal-name" id="delete-template-name">—</div>
+        <div class="delete-modal-actions">
+          <button class="btn" id="btn-cancel-delete">Annuler</button>
+          <button class="btn danger" id="btn-confirm-delete">Supprimer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Indicator -->
+    <div id="save-indicator" class="save-indicator">
+      <span class="dot"></span>
+      <span class="save-text">Sauvegardé</span>
     </div>
 
     <div class="frame">
@@ -479,5 +618,6 @@
         } catch(e){ console.error('[Badge] Error:', e); }
       })();
     </script>
+    </div><!-- end #admin-content -->
   </body>
   </html>

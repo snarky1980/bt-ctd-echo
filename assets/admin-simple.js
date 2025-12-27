@@ -1,5 +1,106 @@
 // Minimal Admin Console (Simple Mode)
 (function(){
+  // ============================================
+  // AUTHENTICATION SYSTEM
+  // ============================================
+  // SHA-256 hash of the admin password
+  // To change the password, generate a new hash with:
+  // crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_PASSWORD')).then(h => console.log(Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('')))
+  const ADMIN_PASSWORD_HASH = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'; // "123" - CHANGE THIS!
+  const AUTH_KEY = 'ea_admin_auth';
+  
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  
+  function isAuthenticated() {
+    return sessionStorage.getItem(AUTH_KEY) === 'true';
+  }
+  
+  function setAuthenticated(value) {
+    if (value) {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+    } else {
+      sessionStorage.removeItem(AUTH_KEY);
+    }
+  }
+  
+  async function handleLogin() {
+    const passwordInput = document.getElementById('admin-password');
+    const errorEl = document.getElementById('login-error');
+    const password = passwordInput?.value || '';
+    
+    if (!password) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Veuillez entrer un mot de passe';
+      return;
+    }
+    
+    const hash = await hashPassword(password);
+    
+    if (hash === ADMIN_PASSWORD_HASH) {
+      setAuthenticated(true);
+      showAdminContent();
+    } else {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Mot de passe incorrect';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  }
+  
+  function showAdminContent() {
+    const loginScreen = document.getElementById('login-screen');
+    const adminContent = document.getElementById('admin-content');
+    
+    if (loginScreen) loginScreen.style.display = 'none';
+    if (adminContent) adminContent.classList.add('authenticated');
+  }
+  
+  function showLoginScreen() {
+    const loginScreen = document.getElementById('login-screen');
+    const adminContent = document.getElementById('admin-content');
+    
+    if (loginScreen) loginScreen.style.display = 'flex';
+    if (adminContent) adminContent.classList.remove('authenticated');
+  }
+  
+  // Initialize authentication
+  function initAuth() {
+    const btnLogin = document.getElementById('btn-login');
+    const passwordInput = document.getElementById('admin-password');
+    
+    if (btnLogin) {
+      btnLogin.addEventListener('click', handleLogin);
+    }
+    
+    if (passwordInput) {
+      passwordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleLogin();
+        }
+      });
+    }
+    
+    // Check if already authenticated
+    if (isAuthenticated()) {
+      showAdminContent();
+    } else {
+      showLoginScreen();
+    }
+  }
+  
+  // Run auth check immediately
+  initAuth();
+  
+  // ============================================
+  // MAIN ADMIN LOGIC (only runs if authenticated)
+  // ============================================
   const DRAFT_KEY = 'ea_admin_simple_v1';
   let data = null; // { metadata, variables, templates }
   let selected = null; // template id
@@ -152,6 +253,26 @@
   const btnPreview = $('#btn-preview');
 
   function notify(msg){ if (!notice) return; notice.textContent = msg; notice.style.display='block'; clearTimeout(notify._t); notify._t=setTimeout(()=>notice.style.display='none', 2000); }
+  
+  // Save indicator system
+  const saveIndicator = $('#save-indicator');
+  const saveText = saveIndicator?.querySelector('.save-text');
+  let saveIndicatorTimeout = null;
+  
+  function showSaveIndicator(status) {
+    if (!saveIndicator) return;
+    saveIndicator.classList.remove('saving', 'saved', 'visible');
+    if (saveText) saveText.textContent = status === 'saving' ? 'Enregistrement…' : 'Sauvegardé ✓';
+    saveIndicator.classList.add(status, 'visible');
+    
+    clearTimeout(saveIndicatorTimeout);
+    if (status === 'saved') {
+      saveIndicatorTimeout = setTimeout(() => {
+        saveIndicator.classList.remove('visible');
+      }, 2000);
+    }
+  }
+  
   function ensureSchema(obj){
     obj = obj && typeof obj==='object' ? obj : {};
     obj.metadata = obj.metadata || { version:'1.0', totalTemplates:0, languages:['fr','en'], categories:[] };
@@ -163,12 +284,15 @@
   }
   function saveDraft(){
     try {
+      showSaveIndicator('saving');
       const serialized = JSON.stringify(data, null, 2);
       localStorage.setItem(DRAFT_KEY, serialized);
       // Publish for main app consumption
       localStorage.setItem('ea_admin_templates_data', serialized);
-      notify('Brouillon enregistré.');
-    } catch {}
+      showSaveIndicator('saved');
+    } catch {
+      showSaveIndicator('saved'); // Still show saved to avoid stuck state
+    }
   }
   function loadDraft(){ try{ const t = localStorage.getItem(DRAFT_KEY); return t ? ensureSchema(JSON.parse(t)) : null; }catch{ return null; } }
   async function fetchJson(url){ const r = await fetch(url, { cache:'no-cache' }); if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); }
@@ -974,7 +1098,49 @@
   if (btnHelp) btnHelp.onclick = openHelpModal;
   $('#btn-reset').onclick = () => { if (!confirm('Effacer le brouillon local et recharger le fichier d\'origine ?')) return; localStorage.removeItem(DRAFT_KEY); location.reload(); };
   $('#btn-new').onclick = () => { const id = uniqueId('modele'); const t={ id, category:'', title:{fr:'',en:''}, description:{fr:'',en:''}, subject:{fr:'',en:''}, body:{fr:'',en:''}, variables:[] }; data.templates.push(t); selected=id; saveDraft(); renderList(); renderEditor(); };
-  $('#btn-delete').onclick = () => { const i = data.templates.findIndex(x=>x.id===selected); if (i>=0 && confirm('Supprimer ce modele ?')){ data.templates.splice(i,1); selected=data.templates[0]?.id||null; saveDraft(); renderList(); renderEditor(); } };
+  
+  // Delete with modal confirmation
+  const modalDelete = $('#modal-delete');
+  const btnCancelDelete = $('#btn-cancel-delete');
+  const btnConfirmDelete = $('#btn-confirm-delete');
+  const deleteTemplateName = $('#delete-template-name');
+  
+  function showDeleteModal() {
+    const t = data.templates.find(x => x.id === selected);
+    if (!t) return;
+    const name = t.title?.fr || t.title?.en || t.id || 'Modèle sans nom';
+    if (deleteTemplateName) deleteTemplateName.textContent = name;
+    if (modalDelete) modalDelete.style.display = 'flex';
+  }
+  
+  function hideDeleteModal() {
+    if (modalDelete) modalDelete.style.display = 'none';
+  }
+  
+  function confirmDelete() {
+    const i = data.templates.findIndex(x => x.id === selected);
+    if (i >= 0) {
+      data.templates.splice(i, 1);
+      selected = data.templates[0]?.id || null;
+      saveDraft();
+      renderList();
+      renderEditor();
+      notify('Modèle supprimé.');
+    }
+    hideDeleteModal();
+  }
+  
+  $('#btn-delete').onclick = showDeleteModal;
+  if (btnCancelDelete) btnCancelDelete.onclick = hideDeleteModal;
+  if (btnConfirmDelete) btnConfirmDelete.onclick = confirmDelete;
+  
+  // Close modal on backdrop click
+  if (modalDelete) {
+    modalDelete.onclick = (e) => {
+      if (e.target === modalDelete) hideDeleteModal();
+    };
+  }
+  
   // Category colors management
   // Clean unused categories
   function cleanUnusedCategories(){
