@@ -121,4 +121,3 @@ MIT License
 ---
 
 Bureau de la traduction - Centre de traduction et documentation
-
